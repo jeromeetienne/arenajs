@@ -1,4 +1,4 @@
-var WarBots	= require('./WarBots.js')
+var WarBots	= require('./WarBots')
 
 var Bot	= WarBots.Body.extend({
 	tick	: function(){

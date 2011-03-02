@@ -1,13 +1,16 @@
 <html>
 <head>
-	<script src='../lib/brequire.js'></script>
-	<script src='brequired/MyTankBot.js'></script>
+	<script src='vendor/brequire.js'></script>
+	<script src='brequired/vendor/class.js'></script>
+	<script src='brequired/src/WarBots.js'></script>
+	<script src='brequired/src/TankBot.js'></script>
+	<script src='brequired/src/MyTankBot.js'></script>
 </head>
 <body>
 	<h2>Brequire Tests </h2>
 </body>
 	<script>
-		var MyTankBot	= require('./MyTankBot.js')
-		console.dir(MyTankBot)
+		var myTankBot	= require('./MyTankBot')
+		console.dir(myTankBot)
 	</script>
 </html>

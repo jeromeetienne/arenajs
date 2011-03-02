@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var MyTankBot	= require('./MyTankBot.js')
+var MyTankBot	= require('./src/MyTankBot')
 
 // instance of a game
 var aliceTank	= new MyTankBot({

@@ -2,7 +2,7 @@
 //		generic WarBots							//
 //////////////////////////////////////////////////////////////////////////////////
 
-var Class	= require('./vendor/class.js');
+var Class	= require('../vendor/class');
 
 var Game	= Class.extend({
 	/**

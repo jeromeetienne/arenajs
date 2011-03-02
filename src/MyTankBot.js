@@ -1,4 +1,4 @@
-var TankBot	= require('./TankBot.js')
+var TankBot	= require('./TankBot')
 
 /**
  * This is a definition of a user bot
