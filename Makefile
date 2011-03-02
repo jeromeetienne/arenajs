@@ -2,5 +2,4 @@
 # little make file to 
 
 brequire:
-	brequire src www/brequired/src
-	brequire vendor www/brequired/vendor
+	brequire lib www/brequired

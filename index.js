@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
-var MyTankBot	= require('./src/MyTankBot')
+
+var TankGame	= require('./lib/TankGame')
+var MyTankBot	= require('./lib/MyTankBot')
 
 // instance of a game
 var aliceTank	= new MyTankBot({
@@ -9,5 +11,11 @@ var aliceTank	= new MyTankBot({
 var bobTank	= new MyTankBot({
 	name	: "bob"
 });
+
+
+var tankGame	= new TankGame();
+tankGame.addBot(aliceTank).addBot(bobTank);
+tankGame.start();
+
 
 
