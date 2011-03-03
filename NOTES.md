@@ -4,3 +4,4 @@
   * only Bot and ParentBot are
 * World is generic
   * botWorld is specific to tank
+* jsbattle
