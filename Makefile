@@ -30,7 +30,7 @@ deployGhPage:
 	rm -rf /tmp/wargameGhPages
 	(cd /tmp && git clone git@github.com:jeromeetienne/wargame.git wargameGhPages)
 	(cd /tmp/wargameGhPages && git checkout gh-pages)
-	cp -a lib/ www/ /tmp/wargameGhPages
+	cp -a Makefile lib/ www/ /tmp/wargameGhPages
 	(cd /tmp/wargameGhPages && rm www/brequired/.gitignore && make brequire_build)
 	(cd /tmp/wargameGhPages && git add . && git commit -a -m "Another deployement" && git push origin gh-pages)
 	#rm -rf /tmp/wargameGhPages
