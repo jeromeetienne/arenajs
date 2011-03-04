@@ -17,8 +17,8 @@ brequire_build:
 brequire_clean:
 	rm -f www/brequired/*.js
 	
-brequire_monitor: brequire
-	(while inotifywait -r -e modify,attrib,create lib ; do make brequire; done)
+brequire_monitor: brequire_build
+	(while inotifywait -r -e modify,attrib,create lib ; do make brequire_build; done)
 
 #################################################################################
 #		deploy								#
