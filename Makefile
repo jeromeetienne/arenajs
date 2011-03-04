@@ -15,7 +15,7 @@ brequire_build:
 	brequire lib www/brequired
 
 brequire_clean:
-	rm www/brequired/*.js
+	rm -f www/brequired/*.js
 	
 brequire_monitor: brequire
 	(while inotifywait -r -e modify,attrib,create lib ; do make brequire; done)
