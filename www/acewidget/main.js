@@ -28,10 +28,21 @@ var AceEditor	= function(){
 	}.bind(this), false);	
 }
 
-AceEditor.prototype.onLoadText	= function(data){
+AceEditor.prototype.onPutText	= function(data){
 	var text	= data.text;
 	this.editor.getSession().getDocument().setValue(text);
 	//this.editor.getSession().setTabSize(8);
+}
+
+AceEditor.prototype.onGotoLine	= function(data){
+	var arg	= parseInt(data.text);
+	this.editor.gotoLine(arg);
+	//this.editor.getSession().setTabSize(8);
+}
+
+AceEditor.prototype.onSetTabSize	= function(data){
+	var arg	= parseInt(data.text);
+	this.editor.getSession().setTabSize(arg);
 }
 
 var main	= function(){

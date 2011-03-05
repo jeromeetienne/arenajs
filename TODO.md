@@ -1,8 +1,11 @@
 # TODO
 
-* make the damage on contact
-  * change the color
-* rename extent in radius
-* renamed the project jsbattle
-* publish a webpage on gh-pages
 * what about core/viewer/editor parts
+
+# DONE
+
+* DONE make the damage on contact
+  * change the color
+* DONE rename extent in radius
+* DONE renamed the project jsbattle
+* DONE publish a webpage on gh-pages

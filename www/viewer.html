@@ -3,13 +3,24 @@
 <head>
 </head>
 <body>
-	<canvas id="renderArea" width="400" height="400" style='border: solid;'>
+	<style type="text/css">
+		canvas {
+			border	: 1px solid black;
+		}
+	</style>
+
+	<canvas id="renderArea" width="400px" height="400px">
 		This text is displayed if your browser does not support HTML5 Canvas.
 	</canvas>
+	<!-- create the image to display in canvas -->
+	<img id="imageBody"	src="images/body.png"	style="display:none"/>
+	<img id="imageBullet"	src="images/bullet.png"	style="display:none"/>
+	<img id="imageRadar"	src="images/radar.png"	style="display:none"/>
+	<img id="imageTurret"	src="images/turret.png"	style="display:none"/>
 
 	<script src='vendor/brequire.js'></script>
 	<script src='brequired/class.js'></script>
-	<script src='brequired/WarBots.js'></script>
+	<script src='brequired/jsbattle.js'></script>
 	<script src='brequired/TankBot.js'></script>
 	<script src='brequired/TankGame.js'></script>
 	<script src='brequired/TankRenderer.js'></script>
