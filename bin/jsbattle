@@ -1,0 +1,15 @@
+#!/usr/bin/env node
+// to run a game at the server level
+// * jsbattle path/to/bot/script1 anotherpath/to/bot/script2
+
+var TankGame	= require('../lib/TankGame');
+
+var filenames	= process.argv.slice(2);
+var scripts	= filenames.map(function(filename){
+	console.log("filename", filename)
+	return require('fs').readFileSync(filename)
+});
+var tankGame	= new TankGame({
+	scripts	: scripts
+})
+
