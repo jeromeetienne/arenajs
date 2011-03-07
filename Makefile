@@ -1,11 +1,26 @@
 #!/usr/bin/make
-# little make file to 
+# to automatize repeatitive actions
 
 
 clean	: brequire_clean
 
-build	: brequire_build
+build	: brequire_build doc_build
 
+test	: jshint
+
+doc	: doc_build
+
+#################################################################################
+#		misc								#
+#################################################################################
+
+jshint	:
+	jshint lib/*.js
+
+doc_build:
+	dox --title "jsbattle - the war of the bots"			\
+		--desc "coders vs coders figthing over tank bots"	\
+		lib/*.js > doc/index.html
 
 #################################################################################
 #		brequire							#

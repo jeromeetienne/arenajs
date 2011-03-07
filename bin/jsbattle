@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // to run a game at the server level
 // * jsbattle path/to/bot/script1 anotherpath/to/bot/script2
+// * the webversion if the viewer
 
 var TankGame	= require('../lib/TankGame');
 

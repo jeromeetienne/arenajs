@@ -1,39 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-</head>
-<body>
-	<style type="text/css">
-		canvas {
-			border	: 1px solid black;
+	<style type="text/css" media="screen">
+		body {
+			overflow: hidden;
+		}
+		#editor {
+			margin	: 0;
+			position: absolute;
+			top	: 0;
+			bottom	: 0;
+			left	: 0;
+			right	: 0;
 		}
 	</style>
-
-	<canvas id="renderArea" width="400px" height="400px">
-		This text is displayed if your browser does not support HTML5 Canvas.
-	</canvas>
-	<!-- create the image to display in canvas -->
-	<img id="imageBody"	src="images/body.png"		style="display:none"/>
-	<img id="imageBullet"	src="images/bullet.png"		style="display:none"/>
-	<img id="imageRadar"	src="images/radar.png"		style="display:none"/>
-	<img id="imageTurret"	src="images/turret.png"		style="display:none"/>
-
+</head>
+<body>
 	<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js'></script>
+	<script src='vendor/jquery.url.js'></script>
 	<script src='vendor/jquery.hotkeys.js'></script>
-	<script src='vendor/key_status.js'></script>
 
-	<script src='vendor/brequire.js'></script>
-	<script src='brequired/class.js'></script>
-	<script src='brequired/jsbattle.js'></script>
-	<script src='brequired/TankBot.js'></script>
-	<script src='brequired/TankGame.js'></script>
-	<script src='brequired/TankRenderer.js'></script>
-	<script src='brequired/TankWorld.js'></script>
-	<script src='brequired/MyTankBot.js'></script>
-	<script src='brequired/MyTankBotHuman.js'></script>
-	<script src='brequired/index.js'></script>
-	<script>require('./index')</script>
-	
+<!--
+- This is a iframe widget
+  * UI to get new script ?
+  * postmessage API ?
+  * ctor parameters
+-->
 	
 </body>
 </html>
