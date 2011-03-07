@@ -17,6 +17,7 @@
 </head>
 <body>
 	<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js'></script>
+	<script src='http://ajax.cdnjs.com/ajax/libs/underscore.js/1.1.4/underscore-min.js'></script>
 	<script src='vendor/jquery.url.js'></script>
 	<script src='vendor/jquery.hotkeys.js'></script>
 
@@ -26,6 +27,24 @@
   * postmessage API ?
   * ctor parameters
 -->
+	<script>
+		var scriptsUrl	= [
+			"http://localhost/~jerome/webwork/jsbattle/www/brequired/MyTankBot.js"
+		];
+		var scriptsData	= {}
+		jQuery.each(scriptsUrl, function(idx, scriptUrl){
+			console.log("scriptUrl", scriptUrl);
+			jQuery.get(scriptUrl, function(scriptData){
+				scriptsData[scriptUrl]	= scriptData;
+				if( _.keys(scriptsData) == scriptUrl.length ){
+					allLoaded()
+				}
+			});
+		});
+		var allLoaded	= function(){
+			console.log("all script have been loaded")
+		}
+	</script>
 	
 </body>
 </html>

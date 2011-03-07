@@ -1,0 +1,3 @@
+[submodule "www/vendor/acewidget"]
+	path = www/vendor/acewidget
+	url = git@github.com:jeromeetienne/acewidget.git
