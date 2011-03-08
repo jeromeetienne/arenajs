@@ -17,7 +17,7 @@ doc	: doc_build
 #################################################################################
 
 homepage_build:
-	pandoc -A pandoc.header.html -s README.md -o index.html
+	pandoc -A ~/.pandoc.header.html -s README.md -o index.html
 	sed -i "s/github.com\/you/github.com\/jeromeetienne\/$(PROJECT_NAME)/g" index.html
 
 jshint	:

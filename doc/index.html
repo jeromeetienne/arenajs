@@ -137,7 +137,7 @@ aka this is to be written by user</p>
 </td>
 <td class="code">
 <pre><code><span class="variable">onHitWall</span>	: <span class="keyword">function</span>(){
-		<span class="this">this</span>.<span class="variable">turn</span>(<span class="number integer">180</span>);		
+		<span class="this">this</span>.<span class="variable">turn</span>(<span class="number integer">180</span>);
 		<span class="comment">//this.turn(180+20-40*Math.random());		</span>
 		<span class="comment">//this.turn(180+20-40*Math.random());		</span>
 		<span class="comment">//this.turn(40-80*Math.random());		</span>
@@ -173,8 +173,7 @@ aka this is to be written by user</p>
 		<span class="keyword">if</span>( <span class="variable">keydown</span>.<span class="variable">space</span> ){
 			<span class="variable">keydown</span>.<span class="variable">space</span>	= <span class="variable">false</span>;
 			<span class="this">this</span>.<span class="variable">shoot</span>();
-		}
-		
+		}		
 		<span class="this">this</span>.<span class="variable">_super</span>();
 	}
 });
@@ -183,6 +182,144 @@ aka this is to be written by user</p>
 </code></pre>
 </td>
 </tr><tr class="filename"><td><h2 id="lib/TankBot.js"><a href="#">TankBot</a></h2></td><td>lib/TankBot.js</td></tr><tr class="code">
+<td class="docs">
+<p>Parent of userTankBot</p>
+</td>
+<td class="code">
+<pre><code><span class="keyword">var</span> <span class="variable">jsbattle</span>	= <span class="variable">require</span>(<span class="string">'./jsbattle'</span>);</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p>To handle a Shoot</p>
+</td>
+<td class="code">
+<pre><code><span class="keyword">var</span> <span class="class">TankShoot</span>	= <span class="variable">jsbattle</span>.<span class="class">Body</span>.<span class="variable">extend</span>({
+	<span class="variable">aLive</span>	: <span class="variable">true</span>,
+	<span class="variable">fromBot</span>	: <span class="keyword">null</span>,
+
+	<span class="variable">init</span>	: <span class="keyword">function</span>(<span class="variable">opts</span>){
+		<span class="this">this</span>.<span class="variable">_super</span>();
+		<span class="comment">// init normal body stuff</span>
+		<span class="this">this</span>.<span class="variable">position</span>	= <span class="variable">opts</span>.<span class="variable">position</span>	|| <span class="variable">console</span>.<span class="variable">assert</span>(<span class="variable">false</span>);
+		<span class="this">this</span>.<span class="variable">rotation</span>	= <span class="variable">opts</span>.<span class="variable">rotation</span>	|| <span class="variable">console</span>.<span class="variable">assert</span>(<span class="variable">false</span>);
+		<span class="this">this</span>.<span class="variable">speed</span>	= <span class="number integer">3</span>;
+		<span class="this">this</span>.<span class="variable">radius</span>	= <span class="number integer">15</span>;
+		<span class="comment">// specific to TankShoot</span>
+		<span class="this">this</span>.<span class="variable">fromBot</span>	= <span class="variable">opts</span>.<span class="variable">fromBot</span>	|| <span class="variable">console</span>.<span class="variable">assert</span>(<span class="variable">false</span>);		
+	},
+	<span class="variable">isAlive</span>	: <span class="keyword">function</span>(){
+		<span class="keyword">return</span> <span class="this">this</span>.<span class="variable">aLive</span>;
+	},
+	<span class="variable">isFrom</span>	: <span class="keyword">function</span>(<span class="variable">bot</span>){
+		<span class="variable">console</span>.<span class="variable">assert</span>( <span class="variable">bot</span> <span class="variable">instanceof</span> <span class="class">TankBot</span> );
+		<span class="keyword">return</span> <span class="variable">bot</span>.<span class="variable">name</span> === <span class="this">this</span>.<span class="variable">fromBot</span>;		
+	},
+	<span class="variable">notify</span>		: <span class="keyword">function</span>(<span class="variable">eventType</span>, <span class="variable">eventData</span>){
+		<span class="keyword">if</span>( <span class="variable">eventType</span> == <span class="string">'hitWall'</span> )	<span class="this">this</span>.<span class="variable">aLive</span>	= <span class="variable">false</span>;
+		<span class="keyword">if</span>( <span class="variable">eventType</span> == <span class="string">'hitBot'</span> )	<span class="this">this</span>.<span class="variable">aLive</span>	= <span class="variable">false</span>;
+	}
+});</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p>To handle a Bot</p>
+</td>
+<td class="code">
+<pre><code><span class="keyword">var</span> <span class="class">TankBot</span>	= <span class="variable">jsbattle</span>.<span class="class">Body</span>.<span class="variable">extend</span>({
+	<span class="variable">bodyMinAngle</span>	: -<span class="number integer">3</span>,
+	<span class="variable">bodyMaxAngle</span>	: <span class="number integer">3</span>,
+	<span class="variable">turretMinAngle</span>	: -<span class="number integer">10</span>,
+	<span class="variable">turretMaxAngle</span>	: <span class="number integer">10</span>,
+	<span class="variable">radarMinAngle</span>	: -<span class="number integer">10</span>,
+	<span class="variable">radarMaxAngle</span>	: <span class="number integer">10</span>,
+	
+	<span class="variable">init</span>	: <span class="keyword">function</span>(<span class="variable">opts</span>){
+		<span class="this">this</span>.<span class="variable">_super</span>();
+
+		<span class="this">this</span>.<span class="variable">tankGame</span>	= <span class="variable">opts</span>.<span class="variable">game</span>	|| <span class="variable">console</span>.<span class="variable">assert</span>(<span class="variable">false</span>);
+		<span class="this">this</span>.<span class="variable">tankGame</span>.<span class="variable">addBody</span>(<span class="this">this</span>);
+
+		<span class="comment">// init normal body stuff</span>
+		<span class="this">this</span>.<span class="variable">position</span>	= <span class="variable">opts</span>.<span class="variable">position</span>	|| {<span class="variable">x</span>:<span class="number integer">20</span>, <span class="variable">y</span>:<span class="number integer">20</span>};
+		<span class="this">this</span>.<span class="variable">rotation</span>	= <span class="class">Math</span>.<span class="variable">floor</span>(<span class="class">Math</span>.<span class="variable">random</span>()*<span class="number integer">360</span>)
+		<span class="this">this</span>.<span class="variable">speed</span>	= <span class="number integer">0</span>;
+
+		<span class="comment">// init specific to TankBot</span>
+		<span class="comment">// TODO i should define that as property above</span>
+		<span class="this">this</span>.<span class="variable">name</span>	= <span class="variable">opts</span>.<span class="variable">name</span>	|| <span class="variable">console</span>.<span class="variable">assert</span>(<span class="variable">false</span>);
+		<span class="this">this</span>.<span class="variable">lifeTotal</span>	= <span class="number integer">100</span>;
+		<span class="this">this</span>.<span class="variable">lifeDamage</span>	= <span class="number integer">0</span>;
+		<span class="this">this</span>.<span class="variable">radarAngle</span>	= <span class="number integer">0</span>;
+		<span class="this">this</span>.<span class="variable">turretAngle</span>= <span class="number integer">0</span>;
+	},
+	<span class="variable">turn</span>	: <span class="keyword">function</span>(<span class="variable">degrees</span>){
+		<span class="comment">// clamp the angle</span>
+		<span class="variable">degrees</span>	= <span class="class">Math</span>.<span class="variable">max</span>(<span class="variable">degrees</span>, <span class="this">this</span>.<span class="variable">bodyMinAngle</span>)
+		<span class="variable">degrees</span>	= <span class="class">Math</span>.<span class="variable">min</span>(<span class="variable">degrees</span>, <span class="this">this</span>.<span class="variable">bodyMaxAngle</span>)
+		
+		<span class="keyword">var</span> <span class="variable">angle</span>	= <span class="variable">degrees</span>/<span class="number integer">180</span>*<span class="class">Math</span>.<span class="class">PI</span>;
+		<span class="this">this</span>.<span class="variable">rotation</span>	+= <span class="variable">angle</span>;
+		<span class="this">this</span>.<span class="variable">rotation</span>	%= <span class="number integer">2</span>*<span class="class">Math</span>.<span class="class">PI</span>;
+		<span class="keyword">return</span> <span class="this">this</span>;
+	},
+	<span class="variable">radarTurn</span>	: <span class="keyword">function</span>(<span class="variable">degrees</span>){
+		<span class="comment">// clamp the angle</span>
+		<span class="comment">//degrees	= Math.max(degrees, this.radarMinAngle)</span>
+		<span class="comment">//degrees	= Math.min(degrees, this.radarMaxAngle)</span>
+		<span class="keyword">var</span> <span class="variable">angle</span>	= <span class="variable">degrees</span>/<span class="number integer">180</span>*<span class="class">Math</span>.<span class="class">PI</span>;
+		<span class="this">this</span>.<span class="variable">radarAngle</span>	+= <span class="variable">angle</span>;
+		<span class="this">this</span>.<span class="variable">radarAngle</span>	%= <span class="number integer">2</span>*<span class="class">Math</span>.<span class="class">PI</span>;
+		<span class="keyword">return</span> <span class="this">this</span>;
+	},
+	<span class="variable">turretTurn</span>	: <span class="keyword">function</span>(<span class="variable">degrees</span>){
+		<span class="comment">//degrees	= Math.max(degrees, this.turretMinAngle)</span>
+		<span class="comment">//degrees	= Math.min(degrees, this.turretMaxAngle)</span>
+		<span class="keyword">var</span> <span class="variable">angle</span>	= <span class="variable">degrees</span>/<span class="number integer">180</span>*<span class="class">Math</span>.<span class="class">PI</span>;
+		<span class="this">this</span>.<span class="variable">turretAngle</span>	+= <span class="variable">angle</span>;
+		<span class="this">this</span>.<span class="variable">turretAngle</span>	%= <span class="number integer">2</span>*<span class="class">Math</span>.<span class="class">PI</span>;
+		<span class="keyword">return</span> <span class="this">this</span>;
+	},
+	<span class="variable">shoot</span>	: <span class="keyword">function</span>(){
+		<span class="keyword">var</span> <span class="variable">rotation</span>	= <span class="this">this</span>.<span class="variable">rotation</span>+<span class="this">this</span>.<span class="variable">turretAngle</span>;
+		<span class="keyword">var</span> <span class="variable">tankShoot</span>	= <span class="keyword">new</span> <span class="class">TankShoot</span>({
+			<span class="variable">rotation</span>	: <span class="variable">rotation</span>,
+			<span class="variable">fromBot</span>		: <span class="this">this</span>.<span class="variable">name</span>,
+			<span class="variable">position</span>	: {
+				<span class="variable">x</span>	: <span class="this">this</span>.<span class="variable">position</span>.<span class="variable">x</span> + <span class="class">Math</span>.<span class="variable">cos</span>(<span class="variable">rotation</span>)*<span class="this">this</span>.<span class="variable">radius</span>,
+				<span class="variable">y</span>	: <span class="this">this</span>.<span class="variable">position</span>.<span class="variable">y</span> + <span class="class">Math</span>.<span class="variable">sin</span>(<span class="variable">rotation</span>)*<span class="this">this</span>.<span class="variable">radius</span>
+			}
+		});
+		<span class="this">this</span>.<span class="variable">tankGame</span>.<span class="variable">addBody</span>(<span class="variable">tankShoot</span>);
+	},
+
+
+	<span class="variable">isAlive</span>	: <span class="keyword">function</span>(){
+		<span class="keyword">return</span> <span class="this">this</span>.<span class="variable">lifeDamage</span> &<span class="variable">lt</span>; <span class="this">this</span>.<span class="variable">lifeTotal</span>;
+	},
+		
+	<span class="variable">notify</span>		: <span class="keyword">function</span>(<span class="variable">eventType</span>, <span class="variable">eventData</span>){
+		<span class="comment">// handle dammage</span>
+		<span class="comment">// - TODO find a nicer way to handle the event in this class</span>
+		<span class="keyword">if</span>( <span class="variable">eventType</span> == <span class="string">'hitWall'</span> )	<span class="this">this</span>.<span class="variable">lifeDamage</span>	+= <span class="number integer">2</span>;
+		<span class="keyword">if</span>( <span class="variable">eventType</span> == <span class="string">'hitBot'</span> )	<span class="this">this</span>.<span class="variable">lifeDamage</span>	-= <span class="number integer">3</span>;
+		<span class="keyword">if</span>( <span class="variable">eventType</span> == <span class="string">'hitShoot'</span> )	<span class="this">this</span>.<span class="variable">lifeDamage</span>	+= <span class="number integer">30</span>;
+		<span class="comment">//this.lifeDamage	= Math.min(this.lifeDamage, this.lifeTotal)</span>
+		<span class="this">this</span>.<span class="variable">lifeDamage</span>	= <span class="class">Math</span>.<span class="variable">max</span>(<span class="this">this</span>.<span class="variable">lifeDamage</span>, <span class="number integer">0</span>)
+
+		<span class="comment">// forward to the on{EventType}() function on the children object</span>
+		<span class="keyword">var</span> <span class="variable">methodName</span>	= &<span class="variable">quot</span>;<span class="variable">on</span>&<span class="variable">quot</span>; + <span class="variable">eventType</span>.<span class="variable">substr</span>(<span class="number integer">0</span>,<span class="number integer">1</span>).<span class="variable">toUpperCase</span>() + <span class="variable">eventType</span>.<span class="variable">substr</span>(<span class="number integer">1</span>);
+		<span class="keyword">if</span>( <span class="variable">methodName</span> <span class="keyword">in</span> <span class="this">this</span> )	<span class="this">this</span>[<span class="variable">methodName</span>](<span class="variable">eventType</span>, <span class="variable">eventData</span>);
+	}
+});
+
+<span class="comment">// commonjs exports</span>
+<span class="variable">exports</span>.<span class="class">Bot</span>	= <span class="class">TankBot</span>;
+<span class="variable">exports</span>.<span class="class">Shoot</span>	= <span class="class">TankShoot</span>;
+</code></pre>
+</td>
+</tr><tr class="filename"><td><h2 id="lib/TankBot.new.js"><a href="#">TankBot.new</a></h2></td><td>lib/TankBot.new.js</td></tr><tr class="code">
 <td class="docs">
 <p>Parent of userTankBot</p>
 </td>
@@ -347,12 +484,15 @@ aka this is to be written by user</p>
 <pre><code><span class="variable">addBody</span>	: <span class="keyword">function</span>(<span class="variable">body</span>){
 		<span class="keyword">if</span>( <span class="variable">body</span> <span class="variable">instanceof</span> <span class="class">TankBot</span>.<span class="class">Bot</span> ){
 			<span class="variable">console</span>.<span class="variable">assert</span>(<span class="this">this</span>.<span class="variable">bots</span>.<span class="variable">length</span> &<span class="variable">lt</span>; <span class="this">this</span>.<span class="variable">maxBots</span>, &<span class="variable">quot</span>;<span class="variable">nb</span> <span class="variable">bots</span> <span class="variable">added</span> &<span class="variable">gt</span>;= <span class="variable">maxbots</span>&<span class="variable">quot</span>;)
+			<span class="variable">console</span>.<span class="variable">assert</span>( <span class="this">this</span>.<span class="variable">bots</span>.<span class="variable">indexOf</span>(<span class="variable">body</span>) === -<span class="number integer">1</span> )		
 			<span class="this">this</span>.<span class="variable">bots</span>.<span class="variable">push</span>(<span class="variable">body</span>)
-			<span class="this">this</span>.<span class="variable">world</span>.<span class="variable">addBody</span>(<span class="variable">body</span>);
 		}<span class="keyword">else</span> <span class="keyword">if</span>( <span class="variable">body</span> <span class="variable">instanceof</span> <span class="class">TankBot</span>.<span class="class">Shoot</span>){
+			<span class="variable">console</span>.<span class="variable">assert</span>( <span class="this">this</span>.<span class="variable">shoots</span>.<span class="variable">indexOf</span>(<span class="variable">body</span>) === -<span class="number integer">1</span> )		
 			<span class="this">this</span>.<span class="variable">shoots</span>.<span class="variable">push</span>(<span class="variable">body</span>)
-			<span class="this">this</span>.<span class="variable">world</span>.<span class="variable">addBody</span>(<span class="variable">body</span>);
-		}<span class="keyword">else</span>	<span class="variable">console</span>.<span class="variable">assert</span>(<span class="variable">false</span>)
+		}<span class="keyword">else</span>{
+			<span class="variable">console</span>.<span class="variable">assert</span>(<span class="variable">false</span>)
+		}
+		<span class="this">this</span>.<span class="variable">world</span>.<span class="variable">addBody</span>(<span class="variable">body</span>);
 		<span class="keyword">return</span> <span class="this">this</span>;
 	},</code></pre>
 </td>
@@ -369,12 +509,13 @@ aka this is to be written by user</p>
 		<span class="keyword">if</span>( <span class="variable">body</span> <span class="variable">instanceof</span> <span class="class">TankBot</span>.<span class="class">Bot</span> ){
 			<span class="variable">console</span>.<span class="variable">assert</span>( <span class="this">this</span>.<span class="variable">bots</span>.<span class="variable">indexOf</span>(<span class="variable">body</span>) != -<span class="number integer">1</span> )		
 			<span class="this">this</span>.<span class="variable">bots</span>.<span class="variable">splice</span>( <span class="this">this</span>.<span class="variable">bots</span>.<span class="variable">indexOf</span>(<span class="variable">body</span>), <span class="number integer">1</span>)
-			<span class="this">this</span>.<span class="variable">world</span>.<span class="variable">delBody</span>(<span class="variable">body</span>);
 		}<span class="keyword">else</span> <span class="keyword">if</span>( <span class="variable">body</span> <span class="variable">instanceof</span> <span class="class">TankBot</span>.<span class="class">Shoot</span>){
 			<span class="variable">console</span>.<span class="variable">assert</span>( <span class="this">this</span>.<span class="variable">shoots</span>.<span class="variable">indexOf</span>(<span class="variable">body</span>) != -<span class="number integer">1</span> )		
 			<span class="this">this</span>.<span class="variable">shoots</span>.<span class="variable">splice</span>( <span class="this">this</span>.<span class="variable">shoots</span>.<span class="variable">indexOf</span>(<span class="variable">body</span>), <span class="number integer">1</span>)
-			<span class="this">this</span>.<span class="variable">world</span>.<span class="variable">delBody</span>(<span class="variable">body</span>);			
-		}<span class="keyword">else</span>	<span class="variable">console</span>.<span class="variable">assert</span>(<span class="variable">false</span>)
+		}<span class="keyword">else</span>{
+			<span class="variable">console</span>.<span class="variable">assert</span>(<span class="variable">false</span>)
+		}
+		<span class="this">this</span>.<span class="variable">world</span>.<span class="variable">delBody</span>(<span class="variable">body</span>);			
 		<span class="keyword">return</span> <span class="this">this</span>;
 	},
 	
@@ -412,33 +553,36 @@ aka this is to be written by user</p>
 			<span class="variable">shoot</span>.<span class="variable">tick</span>();
 		})
 		<span class="comment">// handle collision with walls</span>
-		<span class="this">this</span>.<span class="variable">world</span>.<span class="variable">bodies</span>.<span class="variable">forEach</span>(<span class="keyword">function</span>(<span class="variable">bot</span>){
-			<span class="keyword">var</span> <span class="variable">collided</span>	= <span class="variable">false</span>;
-			<span class="keyword">var</span> <span class="variable">minX</span>	= <span class="this">this</span>.<span class="variable">world</span>.<span class="variable">minPosition</span>.<span class="variable">x</span> + <span class="variable">bot</span>.<span class="variable">radius</span>;
-			<span class="keyword">var</span> <span class="variable">minY</span>	= <span class="this">this</span>.<span class="variable">world</span>.<span class="variable">minPosition</span>.<span class="variable">y</span> + <span class="variable">bot</span>.<span class="variable">radius</span>;
-			<span class="keyword">var</span> <span class="variable">maxX</span>	= <span class="this">this</span>.<span class="variable">world</span>.<span class="variable">maxPosition</span>.<span class="variable">x</span> - <span class="variable">bot</span>.<span class="variable">radius</span>;
-			<span class="keyword">var</span> <span class="variable">maxY</span>	= <span class="this">this</span>.<span class="variable">world</span>.<span class="variable">maxPosition</span>.<span class="variable">y</span> - <span class="variable">bot</span>.<span class="variable">radius</span>;
-			<span class="keyword">if</span>( <span class="variable">bot</span>.<span class="variable">position</span>.<span class="variable">x</span> &<span class="variable">lt</span>; <span class="variable">minX</span> ){
-				<span class="variable">bot</span>.<span class="variable">position</span>.<span class="variable">x</span>	= <span class="variable">minX</span>;
-				<span class="variable">collided</span>	= <span class="variable">true</span>;
-			}
-			<span class="keyword">if</span>( <span class="variable">bot</span>.<span class="variable">position</span>.<span class="variable">y</span> &<span class="variable">lt</span>; <span class="variable">minY</span> ){
-				<span class="variable">bot</span>.<span class="variable">position</span>.<span class="variable">y</span>	= <span class="variable">minY</span>;
-				<span class="variable">collided</span>	= <span class="variable">true</span>;
-			}
-			<span class="keyword">if</span>( <span class="variable">bot</span>.<span class="variable">position</span>.<span class="variable">x</span> &<span class="variable">gt</span>; <span class="variable">maxX</span> ){
-				<span class="variable">bot</span>.<span class="variable">position</span>.<span class="variable">x</span>	= <span class="variable">maxX</span>;
-				<span class="variable">collided</span>	= <span class="variable">true</span>;
-			}
-			<span class="keyword">if</span>( <span class="variable">bot</span>.<span class="variable">position</span>.<span class="variable">y</span> &<span class="variable">gt</span>; <span class="variable">maxY</span> ){
-				<span class="variable">bot</span>.<span class="variable">position</span>.<span class="variable">y</span>	= <span class="variable">maxY</span>;
-				<span class="variable">collided</span>	= <span class="variable">true</span>;
-			}
-			<span class="comment">// notify the bots</span>
-			<span class="keyword">if</span>( <span class="variable">collided</span> ) <span class="variable">bot</span>.<span class="variable">notify</span>(<span class="string">'hitWall'</span>)
-		}.<span class="variable">bind</span>(<span class="this">this</span>))
-
+		<span class="this">this</span>.<span class="variable">_collisionBodyWall</span>();
 		<span class="comment">// handle collision between bots</span>
+		<span class="this">this</span>.<span class="variable">_collisionBotBot</span>();
+		<span class="comment">// handle collision between bots</span>
+		<span class="this">this</span>.<span class="variable">_collisionBotShoot</span>();
+		<span class="comment">// notify all body of death</span>
+		<span class="this">this</span>.<span class="variable">_notify_death</span>();
+	},
+	<span class="variable">_collisionBodyWall</span>	: <span class="keyword">function</span>(){
+		<span class="this">this</span>.<span class="variable">world</span>.<span class="variable">bodies</span>.<span class="variable">forEach</span>(<span class="keyword">function</span>(<span class="variable">body</span>){
+			<span class="comment">// compute the min/max</span>
+			<span class="keyword">var</span> <span class="variable">minX</span>	= <span class="this">this</span>.<span class="variable">world</span>.<span class="variable">minPosition</span>.<span class="variable">x</span> + <span class="variable">body</span>.<span class="variable">radius</span>;
+			<span class="keyword">var</span> <span class="variable">minY</span>	= <span class="this">this</span>.<span class="variable">world</span>.<span class="variable">minPosition</span>.<span class="variable">y</span> + <span class="variable">body</span>.<span class="variable">radius</span>;
+			<span class="keyword">var</span> <span class="variable">maxX</span>	= <span class="this">this</span>.<span class="variable">world</span>.<span class="variable">maxPosition</span>.<span class="variable">x</span> - <span class="variable">body</span>.<span class="variable">radius</span>;
+			<span class="keyword">var</span> <span class="variable">maxY</span>	= <span class="this">this</span>.<span class="variable">world</span>.<span class="variable">maxPosition</span>.<span class="variable">y</span> - <span class="variable">body</span>.<span class="variable">radius</span>;
+			<span class="comment">// define if there is a collision</span>
+			<span class="keyword">var</span> <span class="variable">collided</span>	=  <span class="variable">body</span>.<span class="variable">position</span>.<span class="variable">x</span> &<span class="variable">lt</span>; <span class="variable">minX</span>;
+			<span class="variable">collided</span>	|= <span class="variable">body</span>.<span class="variable">position</span>.<span class="variable">y</span> &<span class="variable">lt</span>; <span class="variable">minY</span>;
+			<span class="variable">collided</span>	|= <span class="variable">body</span>.<span class="variable">position</span>.<span class="variable">x</span> &<span class="variable">gt</span>; <span class="variable">maxX</span>;
+			<span class="variable">collided</span>	|= <span class="variable">body</span>.<span class="variable">position</span>.<span class="variable">y</span> &<span class="variable">gt</span>; <span class="variable">maxY</span>;
+			<span class="comment">// clamp body position</span>
+			<span class="variable">body</span>.<span class="variable">position</span>.<span class="variable">x</span>	= <span class="class">Math</span>.<span class="variable">max</span>(<span class="variable">body</span>.<span class="variable">position</span>.<span class="variable">x</span>, <span class="variable">minX</span>);
+			<span class="variable">body</span>.<span class="variable">position</span>.<span class="variable">x</span>	= <span class="class">Math</span>.<span class="variable">min</span>(<span class="variable">body</span>.<span class="variable">position</span>.<span class="variable">x</span>, <span class="variable">maxX</span>);
+			<span class="variable">body</span>.<span class="variable">position</span>.<span class="variable">y</span>	= <span class="class">Math</span>.<span class="variable">max</span>(<span class="variable">body</span>.<span class="variable">position</span>.<span class="variable">y</span>, <span class="variable">minY</span>);
+			<span class="variable">body</span>.<span class="variable">position</span>.<span class="variable">y</span>	= <span class="class">Math</span>.<span class="variable">min</span>(<span class="variable">body</span>.<span class="variable">position</span>.<span class="variable">y</span>, <span class="variable">maxY</span>);
+			<span class="comment">// notify the bodys</span>
+			<span class="keyword">if</span>( <span class="variable">collided</span> ) <span class="variable">body</span>.<span class="variable">notify</span>(<span class="string">'hitWall'</span>)
+		}.<span class="variable">bind</span>(<span class="this">this</span>))		
+	},
+	<span class="variable">_collisionBotBot</span>	: <span class="keyword">function</span>(){
 		<span class="keyword">for</span>(<span class="keyword">var</span> <span class="variable">i</span> = <span class="number integer">0</span>; <span class="variable">i</span> &<span class="variable">lt</span>; <span class="this">this</span>.<span class="variable">bots</span>.<span class="variable">length</span>; <span class="variable">i</span>++){
 			<span class="keyword">var</span> <span class="variable">aBot</span>	= <span class="this">this</span>.<span class="variable">bots</span>[<span class="variable">i</span>];
 			<span class="keyword">for</span>(<span class="keyword">var</span> <span class="variable">j</span> = <span class="variable">i</span>+<span class="number integer">1</span>; <span class="variable">j</span> &<span class="variable">lt</span>; <span class="this">this</span>.<span class="variable">bots</span>.<span class="variable">length</span>; <span class="variable">j</span>++){
@@ -450,15 +594,30 @@ aka this is to be written by user</p>
 					<span class="variable">otherBot</span>.<span class="variable">notify</span>(<span class="string">'hitBot'</span>, {<span class="variable">otherBot</span>: <span class="variable">aBot</span>})
 				}
 			}
-		}
-
-		<span class="comment">// notify all bots of death</span>
+		}		
+	},
+	<span class="variable">_collisionBotShoot</span>	: <span class="keyword">function</span>(){
+		<span class="keyword">for</span>(<span class="keyword">var</span> <span class="variable">i</span> = <span class="number integer">0</span>; <span class="variable">i</span> &<span class="variable">lt</span>; <span class="this">this</span>.<span class="variable">bots</span>.<span class="variable">length</span>; <span class="variable">i</span>++){
+			<span class="keyword">var</span> <span class="variable">aBot</span>	= <span class="this">this</span>.<span class="variable">bots</span>[<span class="variable">i</span>];
+			<span class="keyword">for</span>(<span class="keyword">var</span> <span class="variable">j</span> = <span class="number integer">0</span>; <span class="variable">j</span> &<span class="variable">lt</span>; <span class="this">this</span>.<span class="variable">shoots</span>.<span class="variable">length</span>; <span class="variable">j</span>++){
+				<span class="keyword">var</span> <span class="variable">aShoot</span>	= <span class="this">this</span>.<span class="variable">shoots</span>[<span class="variable">j</span>];
+				<span class="keyword">if</span>( <span class="variable">aShoot</span>.<span class="variable">isFrom</span>(<span class="variable">aBot</span>) )	<span class="keyword">continue</span>;
+				<span class="keyword">if</span>(<span class="variable">aBot</span>.<span class="variable">collideWith</span>(<span class="variable">aShoot</span>)){
+					<span class="comment">//aBot.bounceAgainst(otherBot);</span>
+					<span class="comment">// notify the bots they hit each other</span>
+					<span class="variable">aBot</span>.<span class="variable">notify</span>(<span class="string">'hitShoot'</span>	, {<span class="variable">otherShoot</span>: <span class="variable">aShoot</span>})
+					<span class="variable">aShoot</span>.<span class="variable">notify</span>(<span class="string">'hitBot'</span>	, {<span class="variable">otherBot</span>: <span class="variable">aBot</span>})
+				}
+			}
+		}		
+	},
+	<span class="variable">_notify_death</span>	: <span class="keyword">function</span>(){
 		<span class="this">this</span>.<span class="variable">world</span>.<span class="variable">bodies</span>.<span class="variable">forEach</span>(<span class="keyword">function</span>(<span class="variable">body</span>){
 			<span class="keyword">if</span>( <span class="variable">body</span>.<span class="variable">isAlive</span>() === <span class="variable">false</span> ){
 				<span class="this">this</span>.<span class="variable">delBody</span>(<span class="variable">body</span>)
 				<span class="variable">body</span>.<span class="variable">notify</span>(<span class="string">'death'</span>)				
 			}
-		}.<span class="variable">bind</span>(<span class="this">this</span>));
+		}.<span class="variable">bind</span>(<span class="this">this</span>));		
 	}
 });
 
@@ -537,7 +696,6 @@ aka this is to be written by user</p>
 		<span class="variable">ctx</span>.<span class="variable">drawImage</span>(<span class="variable">imgRadar</span>	, -<span class="variable">imgRadar</span>.<span class="regexp">/2	, -imgRadar.height/</span><span class="number integer">2</span>);
 		<span class="variable">ctx</span>.<span class="variable">restore</span>();
 
-
 		<span class="comment">// display the name</span>
 		<span class="variable">ctx</span>.<span class="variable">font</span>	= <span class="string">'15px sans-serif bold'</span>;
 		<span class="variable">ctx</span>.<span class="variable">fillStyle</span>	= &<span class="variable">quot</span>;<span class="variable">rgba</span>(<span class="number integer">0</span>,<span class="number integer">0</span>,<span class="number integer">0</span>, <span class="number float">0.5</span>)&<span class="variable">quot</span>;;
@@ -583,7 +741,8 @@ aka this is to be written by user</p>
 		<span class="variable">ctx</span>.<span class="variable">fillText</span>(<span class="variable">body</span>.<span class="variable">name</span>, <span class="variable">body</span>.<span class="variable">position</span>.<span class="variable">x</span>, <span class="variable">body</span>.<span class="variable">position</span>.<span class="variable">y</span>);		
 	},
 	<span class="variable">clearScreen</span>	: <span class="keyword">function</span>(){
-		<span class="this">this</span>.<span class="variable">ctx</span>.<span class="variable">clearRect</span>(<span class="number integer">0</span>,<span class="number integer">0</span>,<span class="this">this</span>.<span class="variable">canvas</span>.<span class="variable">width</span>,<span class="this">this</span>.<span class="variable">canvas</span>.<span class="variable">height</span>);
+		<span class="this">this</span>.<span class="variable">ctx</span>.<span class="variable">fillStyle</span>	= &<span class="variable">quot</span>;<span class="variable">rgb</span>(<span class="number integer">0</span>,<span class="number integer">150</span>,<span class="number integer">0</span>)&<span class="variable">quot</span>;;
+		<span class="this">this</span>.<span class="variable">ctx</span>.<span class="variable">fillRect</span>(<span class="number integer">0</span>,<span class="number integer">0</span>,<span class="this">this</span>.<span class="variable">canvas</span>.<span class="variable">width</span>,<span class="this">this</span>.<span class="variable">canvas</span>.<span class="variable">height</span>);
 	}
 });
 
@@ -708,7 +867,7 @@ MIT Licensed.
 <span class="variable">tankGame</span>.<span class="variable">setWorld</span>(<span class="variable">tankWorld</span>);
 
 <span class="comment">// instance of a game</span>
-<span class="keyword">for</span>(<span class="keyword">var</span> <span class="variable">i</span> = <span class="number integer">0</span>; <span class="variable">i</span> &<span class="variable">lt</span>; <span class="number integer">5</span>; <span class="variable">i</span>++){
+<span class="keyword">for</span>(<span class="keyword">var</span> <span class="variable">i</span> = <span class="number integer">0</span>; <span class="variable">i</span> &<span class="variable">lt</span>; <span class="number integer">10</span>; <span class="variable">i</span>++){
 	<span class="keyword">var</span> <span class="variable">botTank</span>	= <span class="keyword">new</span> <span class="class">MyTankBot</span>({
 		<span class="variable">game</span>	: <span class="variable">tankGame</span>,
 		<span class="variable">name</span>	: &<span class="variable">quot</span>;<span class="variable">bot</span>-&<span class="variable">quot</span>;+<span class="variable">i</span>,
@@ -718,14 +877,16 @@ MIT Licensed.
 		}
 	});
 }
-<span class="keyword">var</span> <span class="variable">botTank</span>	= <span class="keyword">new</span> <span class="class">MyTankBotHuman</span>({
-	<span class="variable">game</span>	: <span class="variable">tankGame</span>,
-	<span class="variable">name</span>	: &<span class="variable">quot</span>;<span class="variable">human</span>-&<span class="variable">quot</span>;+<span class="variable">i</span>,
-	<span class="variable">position</span>: {
-		<span class="variable">x</span>:	<span class="class">Math</span>.<span class="variable">floor</span>(<span class="class">Math</span>.<span class="variable">random</span>()*<span class="variable">tankWorld</span>.<span class="variable">width</span>())	+ <span class="variable">tankWorld</span>.<span class="variable">minPosition</span>.<span class="variable">x</span>,
-		<span class="variable">y</span>:	<span class="class">Math</span>.<span class="variable">floor</span>(<span class="class">Math</span>.<span class="variable">random</span>()*<span class="variable">tankWorld</span>.<span class="variable">height</span>())	+ <span class="variable">tankWorld</span>.<span class="variable">minPosition</span>.<span class="variable">y</span>
-	}
-});
+<span class="keyword">if</span>(<span class="variable">true</span>){
+	<span class="keyword">var</span> <span class="variable">botTank</span>	= <span class="keyword">new</span> <span class="class">MyTankBotHuman</span>({
+		<span class="variable">game</span>	: <span class="variable">tankGame</span>,
+		<span class="variable">name</span>	: &<span class="variable">quot</span>;<span class="variable">human</span>-&<span class="variable">quot</span>;+<span class="variable">i</span>,
+		<span class="variable">position</span>: {
+			<span class="variable">x</span>:	<span class="class">Math</span>.<span class="variable">floor</span>(<span class="class">Math</span>.<span class="variable">random</span>()*<span class="variable">tankWorld</span>.<span class="variable">width</span>())	+ <span class="variable">tankWorld</span>.<span class="variable">minPosition</span>.<span class="variable">x</span>,
+			<span class="variable">y</span>:	<span class="class">Math</span>.<span class="variable">floor</span>(<span class="class">Math</span>.<span class="variable">random</span>()*<span class="variable">tankWorld</span>.<span class="variable">height</span>())	+ <span class="variable">tankWorld</span>.<span class="variable">minPosition</span>.<span class="variable">y</span>
+		}
+	});	
+}
 
 
 <span class="comment">// start the game</span>
@@ -787,9 +948,11 @@ MIT Licensed.
 	},
 	<span class="variable">addBody</span>	: <span class="keyword">function</span>(<span class="variable">body</span>){
 		<span class="variable">console</span>.<span class="variable">assert</span>(<span class="variable">body</span> <span class="variable">instanceof</span> <span class="class">Body</span>);
+		<span class="variable">console</span>.<span class="variable">assert</span>( <span class="this">this</span>.<span class="variable">bodies</span>.<span class="variable">indexOf</span>(<span class="variable">body</span>) === -<span class="number integer">1</span> )
 		<span class="this">this</span>.<span class="variable">bodies</span>.<span class="variable">push</span>(<span class="variable">body</span>);
 	},
 	<span class="variable">delBody</span>	: <span class="keyword">function</span>(<span class="variable">body</span>){
+		<span class="variable">console</span>.<span class="variable">assert</span>(<span class="variable">body</span> <span class="variable">instanceof</span> <span class="class">Body</span>);
 		<span class="variable">console</span>.<span class="variable">assert</span>( <span class="this">this</span>.<span class="variable">bodies</span>.<span class="variable">indexOf</span>(<span class="variable">body</span>) != -<span class="number integer">1</span> )
 		<span class="this">this</span>.<span class="variable">bodies</span>.<span class="variable">splice</span>( <span class="this">this</span>.<span class="variable">bodies</span>.<span class="variable">indexOf</span>(<span class="variable">body</span>), <span class="number integer">1</span>)
 	}
