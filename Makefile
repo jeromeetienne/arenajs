@@ -53,5 +53,6 @@ deployGhPage:
 	(cd /tmp/$(PROJECT_NAME)GhPages && git checkout gh-pages)
 	cp -a Makefile lib/ www/ *.html .nojekyll /tmp/$(PROJECT_NAME)GhPages
 	(cd /tmp/$(PROJECT_NAME)GhPages && rm www/brequired/.gitignore && make brequire_build)
-	(cd /tmp/$(PROJECT_NAME)GhPages && git add . && git commit -a -m "Another deployement" && git push origin gh-pages)
+	(cd /tmp/$(PROJECT_NAME)GhPages && git add . && git commit -a -m "Another deployement")
+	(cd /tmp/$(PROJECT_NAME)GhPages && git push origin gh-pages)
 	#rm -rf /tmp/$(PROJECT_NAME)GhPages
