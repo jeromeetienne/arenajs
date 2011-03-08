@@ -51,7 +51,7 @@ deployGhPage:
 	rm -rf /tmp/$(PROJECT_NAME)GhPages
 	(cd /tmp && git clone git@github.com:jeromeetienne/$(PROJECT_NAME).git $(PROJECT_NAME)GhPages)
 	(cd /tmp/$(PROJECT_NAME)GhPages && git checkout gh-pages)
-	cp -a Makefile lib/ www/ /tmp/$(PROJECT_NAME)GhPages
+	cp -a Makefile lib/ www/ *.html *.txt /tmp/$(PROJECT_NAME)GhPages
 	(cd /tmp/$(PROJECT_NAME)GhPages && rm www/brequired/.gitignore && make brequire_build)
 	(cd /tmp/$(PROJECT_NAME)GhPages && git add . && git commit -a -m "Another deployement" && git push origin gh-pages)
 	#rm -rf /tmp/$(PROJECT_NAME)GhPages
