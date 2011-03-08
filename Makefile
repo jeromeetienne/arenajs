@@ -6,7 +6,7 @@ PROJECT_NAME=jsbattle
 
 clean	: brequire_clean
 
-build	: homepage_build brequire_build doc_build
+build	: homepage_build brequire_build doc_build 
 
 test	: jshint
 
