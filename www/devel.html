@@ -48,8 +48,11 @@
 	<script src='brequired/MyTankBotHuman.js'></script>
 	<script src='brequired/jsbattle_core.js'></script>
 	<script src='brequired/index.js'></script>
+	<script>require('./index');</script>
+
 
 	<script id="prout">
+	return;
 		jQuery(function(){
 			//var acewidget	= jQuery('#acewidgetContainer').acewidget();
 			//acewidget.bind('load', function(){
@@ -88,10 +91,10 @@
 			}
 			setPageState(scriptsUrl)
 			
-			var viewer	= new Viewer({
-				scriptsUrl	: scriptsUrl,
-				editorCss	: "#acewidgetContainer"
-			})
+			//
+			//var viewer	= new Viewer({
+			//	editorCss	: "#acewidgetContainer"
+			//})
 		});
 	</script>
 	

@@ -1,9 +1,8 @@
 /**
  * Constructor
 */
-var Viewer	= function(ctor_opts){
+var Viewer	= function(){
 	// get options from ctor
-	this.scripts	= ctor_opts.scripts	|| console.assert(false);
 	this.editorCss	= ctor_opts.editorCss	|| false;
 
 	
@@ -12,7 +11,7 @@ var Viewer	= function(ctor_opts){
 			editorCss	: this.editorCss
 		})
 	}
-	
+
 	// init this.state
 	this.state	= Viewer.state.none;
 
@@ -43,11 +42,22 @@ Viewer.prototype.destroy	= function(){
 // microevent mixing Viewer
 microevent.mixin(Viewer)
 
-Viewer.prototype.start		= function(){	
+Viewer.prototype.start		= function(){
 }
 Viewer.prototype.pause		= function(){
 }
 Viewer.prototype.stop		= function(){	
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+//		PageState							//
+//////////////////////////////////////////////////////////////////////////////////
+
+Viewer.prototype.pageStateSet	= function(state){
+	jQuery.bbq.pushState(state);
+}
+Viewer.prototype.pageStateGet	= function(){
+	return jQuery.bbq.getState();
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -86,13 +96,3 @@ Viewer.editor.put	= function(callback){
 	})
 }
 
-//////////////////////////////////////////////////////////////////////////////////
-//		PageState							//
-//////////////////////////////////////////////////////////////////////////////////
-
-Viewer.prototype.pageStateSet	= function(state){
-	jQuery.bbq.pushState(state);
-}
-Viewer.prototype.pageStateGet	= function(){
-	return jQuery.bbq.getState();
-}
