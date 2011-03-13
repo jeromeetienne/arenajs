@@ -3,29 +3,37 @@
 <head>
 </head>
 <body>
+
+	<div id="editor" style="float: right">
+		<div id="acewidgetContainer"></div>
+		<input type="button" value="save"/>
+	</div>
+
+	<!-- define jsbattle viewport -->
 	<style type="text/css">
 		canvas {
 			border	: 1px solid black;
 		}
 	</style>
-
-	<canvas id="renderArea" width="400px" height="400px">
-		This text is displayed if your browser does not support HTML5 Canvas.
-	</canvas>
-	<!-- create the image to display in canvas -->
+	<canvas id="renderArea" width="400px" height="400px"></canvas>
+	
+	<!-- create the image to display in jsbattle viewport -->
 	<img id="imageBody"	src="images/body.png"		style="display:none"/>
 	<img id="imageBullet"	src="images/bullet.png"		style="display:none"/>
 	<img id="imageRadar"	src="images/radar.png"		style="display:none"/>
 	<img id="imageTurret"	src="images/turret.png"		style="display:none"/>
 
 	<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js'></script>
+	<script src='http://ajax.cdnjs.com/ajax/libs/underscore.js/1.1.4/underscore-min.js'></script>
 	<script src='vendor/jquery.hotkeys.js'></script>
 	<script src='vendor/jquery.ba-bbq.js'></script>
-	<script src='vendor/firebugx.js'></script>
 	
+	<script src="https://github.com/jeromeetienne/acewidget/raw/master/contrib/jquery.acewidget/jquery.acewidget.js"></script>	
+
+	<script src='vendor/firebugx.js'></script>
+
 	<script src='vendor/key_status.js'></script>
 	
-
 	<script src='vendor/brequire.js'></script>
 	<script src='brequired/class.js'></script>
 	<script src='brequired/microevent.js'></script>
@@ -40,12 +48,51 @@
 	<script src='brequired/MyTankBotHuman.js'></script>
 	<script src='brequired/jsbattle_core.js'></script>
 	<script src='brequired/index.js'></script>
-<!--	<script>require('./index')</script>
--->
+
+	<script id="prout">
+		jQuery(function(){
+			//var acewidget	= jQuery('#acewidgetContainer').acewidget();
+			//acewidget.bind('load', function(){
+			//	console.log("editor loaded")
+			//})
+			//
+			//jQuery('#editor input').click(function(){
+			//	acewidget.getValue(function(result){
+			//		console.dir(result.data.data)
+			//	})
+			//})
+			var scriptsUrl	= {
+				"bot-1"	: "http://localhost/~jerome/webwork/jsbattle/lib/MyTankBot.js",
+				"bot-2"	: "http://localhost/~jerome/webwork/jsbattle/lib/MyTankBotHuman.js"
+			};
+
+			var scriptsData	= {};
+			_.each(scriptsUrl, function(scriptUrl, scriptId){
+				jQuery.get(scriptUrl, function(scriptData){
+					console.log("scriptUrl", scriptUrl, scriptId);
+					scriptsData[scriptId]	= scriptData;
+					if( _.keys(scriptsData).length == _.keys(scriptsUrl).length ){
+						console.log("prout", scriptsData)
+						//allLoaded()
+					}
+				}, 'html');
+			});
 
 
-	<script>
-	
+			
+			var setPageState	= function(state){
+				jQuery.bbq.pushState(state);
+			}
+			var getPageState	= function(){
+				return jQuery.bbq.getState();
+			}
+			setPageState(scriptsUrl)
+			
+			var viewer	= new Viewer({
+				scriptsUrl	: scriptsUrl,
+				editorCss	: "#acewidgetContainer"
+			})
+		});
 	</script>
 	
 	
