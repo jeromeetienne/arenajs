@@ -129,6 +129,7 @@ aka this is to be written by user</p>
 		<span class="comment">//this.turretTurn(util.deg2rad(1));</span>
 		<span class="this">this</span>.<span class="variable">turretToNearestBot</span>();
 
+		<span class="comment">// TODO move this _super() at the begining of the function</span>
 		<span class="this">this</span>.<span class="variable">_super</span>();
 	},</code></pre>
 </td>
@@ -180,8 +181,7 @@ aka this is to be written by user</p>
 		<span class="keyword">if</span>( <span class="variable">keydown</span>.<span class="variable">q</span> )		<span class="this">this</span>.<span class="variable">radarTurn</span>(<span class="variable">util</span>.<span class="variable">deg2rad</span>(-<span class="number integer">5</span>));
 		<span class="keyword">if</span>( <span class="variable">keydown</span>.<span class="variable">d</span> )		<span class="this">this</span>.<span class="variable">radarTurn</span>(<span class="variable">util</span>.<span class="variable">deg2rad</span>(+<span class="number integer">5</span>));
 		<span class="comment">// another way to make pluging without mixin</span>
-		<span class="keyword">if</span>( <span class="variable">keydown</span>.<span class="variable">s</span> )		<span class="variable">turretPlugin</span>.<span class="variable">radarFront</span>(<span class="this">this</span>);
-		
+		<span class="keyword">if</span>( <span class="variable">keydown</span>.<span class="variable">s</span> )		<span class="variable">turretPlugin</span>.<span class="variable">radarFront</span>(<span class="this">this</span>);		
 
 		<span class="keyword">if</span>( <span class="variable">keydown</span>.<span class="variable">up</span> )	<span class="this">this</span>.<span class="variable">setSpeed</span>(+<span class="number integer">5</span>);
 		<span class="keyword">else</span> <span class="keyword">if</span>( <span class="variable">keydown</span>.<span class="variable">down</span> )	<span class="this">this</span>.<span class="variable">setSpeed</span>(-<span class="number integer">5</span>);
@@ -192,8 +192,8 @@ aka this is to be written by user</p>
 			<span class="this">this</span>.<span class="variable">shoot</span>();
 		}
 		
-		<span class="comment">//this.turretToNearestBot();</span>
-		<span class="comment">//this.bodyToNearestBot();</span>
+		<span class="this">this</span>.<span class="variable">turretToNearestBot</span>();
+		<span class="this">this</span>.<span class="variable">bodyToNearestBot</span>();
 		<span class="this">this</span>.<span class="variable">_super</span>();
 	}	
 });
@@ -244,6 +244,7 @@ aka this is to be written by user</p>
 		<span class="keyword">return</span> <span class="variable">bot</span>.<span class="variable">name</span> === <span class="this">this</span>.<span class="variable">fromBot</span>;		
 	},
 	<span class="variable">notify</span>		: <span class="keyword">function</span>(<span class="variable">eventType</span>, <span class="variable">eventData</span>){
+		<span class="this">this</span>.<span class="variable">_super</span>();
 		<span class="keyword">if</span>( <span class="variable">eventType</span> == <span class="string">'hitWall'</span> )	<span class="this">this</span>.<span class="variable">aLive</span>	= <span class="variable">false</span>;
 		<span class="keyword">if</span>( <span class="variable">eventType</span> == <span class="string">'hitBot'</span> )	<span class="this">this</span>.<span class="variable">aLive</span>	= <span class="variable">false</span>;
 	}
@@ -320,6 +321,7 @@ aka this is to be written by user</p>
 	},
 		
 	<span class="variable">notify</span>		: <span class="keyword">function</span>(<span class="variable">eventType</span>, <span class="variable">eventData</span>){
+		<span class="this">this</span>.<span class="variable">_super</span>.<span class="variable">apply</span>(<span class="this">this</span>, <span class="variable">arguments</span>);
 		<span class="comment">// handle dammage</span>
 		<span class="comment">// - TODO find a nicer way to handle the event in this class</span>
 		<span class="keyword">if</span>( <span class="variable">eventType</span> == <span class="string">'hitWall'</span> )	<span class="this">this</span>.<span class="variable">lifeDamage</span>	+= <span class="number integer">2</span>;
@@ -403,7 +405,7 @@ aka this is to be written by user</p>
 		<span class="keyword">var</span> <span class="variable">turnAngle</span>	= -<span class="number integer">1</span> * <span class="variable">util</span>.<span class="variable">radCenter</span>(<span class="variable">tankbot</span>.<span class="variable">turn</span>() - <span class="variable">absAngle</span>);
 		<span class="comment">// setup a minimum to avoid the shacking.</span>
 		<span class="keyword">if</span>( <span class="class">Math</span>.<span class="variable">abs</span>(<span class="variable">turnAngle</span>) &<span class="variable">lt</span>; <span class="variable">util</span>.<span class="variable">deg2rad</span>(<span class="number integer">15</span>) )	<span class="variable">turnAngle</span> = <span class="number integer">0</span>;
-		<span class="this">this</span>.<span class="variable">turn</span>(<span class="variable">turnAngle</span>);
+		<span class="variable">tankbot</span>.<span class="variable">turn</span>(<span class="variable">turnAngle</span>);
 	},
 
 	<span class="variable">turretToNearestBot</span>	: <span class="keyword">function</span>(<span class="variable">tankbot</span>){
@@ -454,6 +456,7 @@ aka this is to be written by user</p>
 	<span class="variable">world</span>		: <span class="keyword">null</span>,
 	<span class="variable">bots</span>		: [],
 	<span class="variable">shoots</span>		: [],
+	<span class="variable">tickEvents</span>	: [],
 	
 	<span class="variable">destroy</span>	: <span class="keyword">function</span>(){
 		<span class="variable">clearTimeout</span>(<span class="this">this</span>.<span class="variable">timeoutId</span>)
@@ -486,6 +489,16 @@ aka this is to be written by user</p>
 			<span class="variable">console</span>.<span class="variable">assert</span>(<span class="variable">false</span>)
 		}
 		<span class="this">this</span>.<span class="variable">world</span>.<span class="variable">addBody</span>(<span class="variable">body</span>);
+		
+		<span class="comment">// for body, bind 'notified'</span>
+		<span class="comment">// - create the bind callback if needed</span>
+		<span class="this">this</span>.$<span class="variable">bodyBindNotified</span>	= <span class="this">this</span>.$<span class="variable">bodyBindNotified</span> || <span class="keyword">function</span>(<span class="variable">event</span>){
+			<span class="this">this</span>.<span class="variable">tickEvents</span>.<span class="variable">push</span>(<span class="variable">event</span>);
+			<span class="comment">//console.log(&quot;event&quot;, event)</span>
+		}.<span class="variable">bind</span>(<span class="this">this</span>);
+		<span class="variable">body</span>.<span class="variable">bind</span>(&<span class="variable">quot</span>;<span class="variable">notified</span>&<span class="variable">quot</span>;, <span class="this">this</span>.$<span class="variable">bodyBindNotified</span>);
+		
+		<span class="comment">// return this for chained api</span>
 		<span class="keyword">return</span> <span class="this">this</span>;
 	},</code></pre>
 </td>
@@ -509,6 +522,9 @@ aka this is to be written by user</p>
 			<span class="variable">console</span>.<span class="variable">assert</span>(<span class="variable">false</span>)
 		}
 		<span class="this">this</span>.<span class="variable">world</span>.<span class="variable">delBody</span>(<span class="variable">body</span>);			
+		<span class="comment">// for body, unbind 'notified'</span>
+		<span class="variable">body</span>.<span class="variable">unbind</span>(&<span class="variable">quot</span>;<span class="variable">notified</span>&<span class="variable">quot</span>;, <span class="this">this</span>.$<span class="variable">bodyBindNotified</span>);
+		<span class="comment">// return this for chained api</span>
 		<span class="keyword">return</span> <span class="this">this</span>;
 	},
 	
@@ -520,11 +536,20 @@ aka this is to be written by user</p>
 
 		<span class="comment">// this is the game loop</span>
 		<span class="keyword">var</span> <span class="variable">callback</span>	= <span class="keyword">function</span>(){
+			
+			<span class="comment">// sanity check the</span>
+			<span class="comment">//console.dir(this.tickEvents)</span>
+			<span class="variable">console</span>.<span class="variable">assert</span>(<span class="this">this</span>.<span class="variable">tickEvents</span>.<span class="variable">length</span> === <span class="number integer">0</span>);
+			
 			<span class="comment">// do the local tick</span>
 			<span class="this">this</span>.<span class="variable">tick</span>();
 
 			<span class="comment">// emit the 'tick' event</span>
-			<span class="this">this</span>.<span class="variable">trigger</span>(<span class="string">'tick'</span>, <span class="this">this</span>.<span class="variable">world</span>)
+			<span class="this">this</span>.<span class="variable">trigger</span>(<span class="string">'tick'</span>, {
+				<span class="variable">world</span>		: <span class="this">this</span>.<span class="variable">world</span>,
+				<span class="variable">tickEvents</span>	: <span class="this">this</span>.<span class="variable">tickEvents</span>
+			});
+			<span class="this">this</span>.<span class="variable">tickEvents</span>	= [];
 
 			<span class="comment">// count the turns</span>
 			<span class="this">this</span>.<span class="variable">turnIdx</span>++;
@@ -659,16 +684,22 @@ aka this is to be written by user</p>
 </code></pre>
 </td>
 <td class="code">
-<pre><code><span class="variable">renderWorld</span>	: <span class="keyword">function</span>(<span class="variable">tankWorld</span>){
+<pre><code><span class="variable">renderWorld</span>	: <span class="keyword">function</span>(<span class="variable">tankWorld</span>, <span class="variable">tickEvents</span>){
 		<span class="comment">// if not inBrowser, return now</span>
 		<span class="keyword">if</span>( !<span class="this">this</span>.<span class="variable">inBrowser</span> )	<span class="keyword">return</span>;
+
 		<span class="this">this</span>.<span class="variable">clearScreen</span>();
-		<span class="comment">//console.log(&quot;render bodies&quot;, tankWorld.bodies.length);</span>
+
+		<span class="comment">// display all bodies</span>
 		<span class="variable">tankWorld</span>.<span class="variable">bodies</span>.<span class="variable">forEach</span>(<span class="keyword">function</span>(<span class="variable">body</span>){
 			<span class="this">this</span>.<span class="variable">_dispBody</span>(<span class="variable">body</span>)
 			<span class="keyword">if</span>( <span class="variable">body</span> <span class="variable">instanceof</span> <span class="class">TankBot</span>.<span class="class">Bot</span> )	<span class="this">this</span>.<span class="variable">_dispTank</span>(<span class="variable">body</span>)
 			<span class="keyword">if</span>( <span class="variable">body</span> <span class="variable">instanceof</span> <span class="class">TankBot</span>.<span class="class">Shoot</span> )	<span class="this">this</span>.<span class="variable">_dispShoot</span>(<span class="variable">body</span>)
 		}.<span class="variable">bind</span>(<span class="this">this</span>));
+		
+		<span class="variable">tickEvents</span>.<span class="variable">forEach</span>(<span class="keyword">function</span>(<span class="variable">event</span>){
+			<span class="comment">//console.log(&quot;event&quot;, event)</span>
+		})
 	},</code></pre>
 </td>
 </tr>
@@ -907,7 +938,7 @@ MIT Licensed.
 		}
 	});
 }
-<span class="keyword">if</span>(<span class="variable">false</span>){
+<span class="keyword">if</span>(<span class="variable">true</span>){
 	<span class="keyword">var</span> <span class="variable">botTank</span>	= <span class="keyword">new</span> <span class="class">MyTankBotHuman</span>({
 		<span class="variable">game</span>	: <span class="variable">tankGame</span>,
 		<span class="variable">name</span>	: &<span class="variable">quot</span>;<span class="variable">human</span>-&<span class="variable">quot</span>;+<span class="variable">i</span>,
@@ -921,9 +952,16 @@ MIT Licensed.
 <span class="comment">// start the game</span>
 <span class="variable">tankGame</span>.<span class="variable">start</span>();
 
-<span class="variable">tankGame</span>.<span class="variable">bind</span>(<span class="string">'tick'</span>, <span class="keyword">function</span>(<span class="variable">world</span>){
-	<span class="variable">tankRenderer</span>.<span class="variable">renderWorld</span>(<span class="variable">world</span>)
+<span class="variable">tankGame</span>.<span class="variable">bind</span>(<span class="string">'tick'</span>, <span class="keyword">function</span>(<span class="variable">gameState</span>){
+	<span class="keyword">var</span> <span class="variable">world</span>	= <span class="variable">gameState</span>.<span class="variable">world</span>;
+	<span class="keyword">var</span> <span class="variable">tickEvents</span>	= <span class="variable">gameState</span>.<span class="variable">tickEvents</span>;
+	<span class="variable">tankRenderer</span>.<span class="variable">renderWorld</span>(<span class="variable">world</span>, <span class="variable">tickEvents</span>)
 });
+
+<span class="variable">tankGame</span>.<span class="variable">bind</span>(<span class="string">'end'</span>, <span class="keyword">function</span>(<span class="variable">gameResult</span>){
+	<span class="variable">console</span>.<span class="variable">log</span>(&<span class="variable">quot</span>;<span class="variable">game</span> <span class="variable">end</span>. <span class="variable">result</span>&<span class="variable">quot</span>;, <span class="variable">gameResult</span>)
+});
+
 
 </code></pre>
 </td>
@@ -1018,11 +1056,18 @@ MIT Licensed.
 	},
 	<span class="variable">getSpeed</span>	: <span class="keyword">function</span>(){
 		<span class="keyword">return</span> <span class="this">this</span>.<span class="variable">speed</span>;
-	},
-
-
-	<span class="variable">notify</span>		: <span class="keyword">function</span>(<span class="variable">eventType</span>, <span class="variable">eventData</span>){
-		<span class="variable">console</span>.<span class="variable">log</span>(&<span class="variable">quot</span>;<span class="variable">basic</span> <span class="variable">fallback</span> <span class="variable">notify</span> <span class="keyword">function</span>&<span class="variable">quot</span>;, <span class="variable">eventType</span>, <span class="variable">eventData</span>)
+	},</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<pre><code> * - microevent triggerd ("notified" eventType, eventData)
+</code></pre>
+</td>
+<td class="code">
+<pre><code><span class="variable">notify</span>		: <span class="keyword">function</span>(<span class="variable">eventType</span>, <span class="variable">eventData</span>){
+		<span class="this">this</span>.<span class="variable">trigger</span>(&<span class="variable">quot</span>;<span class="variable">notified</span>&<span class="variable">quot</span>;, {<span class="variable">type</span> : <span class="variable">eventType</span>, <span class="variable">data</span> : <span class="variable">eventData</span>})
+		<span class="comment">//console.log(&quot;basic fallback notify function&quot;, eventType, eventData)</span>
 	},</code></pre>
 </td>
 </tr>
@@ -1114,6 +1159,10 @@ MIT Licensed.
 });
 
 
+<span class="comment">// inherit microevent in Body</span>
+<span class="variable">require</span>(<span class="string">'./microevent'</span>).<span class="variable">mixin</span>(<span class="class">Body</span>)
+
+
 <span class="comment">// commonjs exports</span>
 <span class="variable">exports</span>.<span class="class">Game</span>	= <span class="class">Game</span>;
 <span class="variable">exports</span>.<span class="class">Body</span>	= <span class="class">Body</span>;
@@ -1123,64 +1172,69 @@ MIT Licensed.
 </td>
 </tr><tr class="filename"><td><h2 id="lib/microevent.js"><a href="#">microevent</a></h2></td><td>lib/microevent.js</td></tr><tr class="code">
 <td class="docs">
-<p>var microevent	= function(){}
-microevent.prototype	= {
-	fcts	: {},
-	bind	: function(event, fct){
-		this.fcts[event]	= this.fcts[event]	|| [];
-		this.fcts[event].push(fct);
-		return this;
-	},
-	unbind	: function(event, fct){
-		var arr	= this.fcts[event];
-		if( typeof arr !== 'undefined' )	return this;
-		arr.splice(arr.indexOf(fct), 1);
-		return this;
-	},
-	trigger	: function(event</p>
+<p>microevent - to make any js object an event emitter (server or browser)</p>
+
+<ul><li>pure javascript - server compatible, browser compatible</li><li>dont rely on the browser doms</li><li><p>super simple - you get it immediatly, no mistery, no magic involved</p></li><li><p>create a microeventdebug with goodies to debug</p><ul><li>make it safer to use</li></ul></li></ul>
 </td>
 <td class="code">
-<pre><code> , <span class="variable">args</span>... </code></pre>
+<pre><code><span class="keyword">var</span> <span class="variable">microevent</span>	= <span class="keyword">function</span>(){}
+<span class="variable">microevent</span>.<span class="variable">prototype</span>	= {
+	<span class="variable">fcts</span>	: {},
+	<span class="variable">bind</span>	: <span class="keyword">function</span>(<span class="variable">event</span>, <span class="variable">fct</span>){
+		<span class="this">this</span>.<span class="variable">fcts</span>[<span class="variable">event</span>]	= <span class="this">this</span>.<span class="variable">fcts</span>[<span class="variable">event</span>]	|| [];
+		<span class="this">this</span>.<span class="variable">fcts</span>[<span class="variable">event</span>].<span class="variable">push</span>(<span class="variable">fct</span>);
+		<span class="keyword">return</span> <span class="this">this</span>;
+	},
+	<span class="variable">unbind</span>	: <span class="keyword">function</span>(<span class="variable">event</span>, <span class="variable">fct</span>){
+		<span class="variable">console</span>.<span class="variable">assert</span>(<span class="keyword">typeof</span> <span class="variable">fct</span> === <span class="string">'function'</span>)
+		<span class="keyword">var</span> <span class="variable">arr</span>	= <span class="this">this</span>.<span class="variable">fcts</span>[<span class="variable">event</span>];
+		<span class="keyword">if</span>( <span class="keyword">typeof</span> <span class="variable">arr</span> !== <span class="string">'undefined'</span> )	<span class="keyword">return</span> <span class="this">this</span>;
+		<span class="variable">console</span>.<span class="variable">assert</span>(<span class="variable">arr</span>.<span class="variable">indexOf</span>(<span class="variable">fct</span>) !== -<span class="number integer">1</span>);
+		<span class="variable">arr</span>.<span class="variable">splice</span>(<span class="variable">arr</span>.<span class="variable">indexOf</span>(<span class="variable">fct</span>), <span class="number integer">1</span>);
+		<span class="keyword">return</span> <span class="this">this</span>;
+	},
+	<span class="variable">trigger</span>	: <span class="keyword">function</span>(<span class="variable">event</span></code></pre>
 </td>
 </tr>
 <tr class="code">
 <td class="docs">
-<p>){
-		var arr	= this.fcts[event];
-		if( typeof arr === 'undefined' )	return this;
-		for(var i = 0; i &lt; arr.length; i++){
-			arr[i].apply(this, Array.prototype.slice.call(arguments, 1))
+<p> , args... </p>
+</td>
+<td class="code">
+<pre><code>){
+		<span class="keyword">var</span> <span class="variable">arr</span>	= <span class="this">this</span>.<span class="variable">fcts</span>[<span class="variable">event</span>];
+		<span class="keyword">if</span>( <span class="keyword">typeof</span> <span class="variable">arr</span> === <span class="string">'undefined'</span> )	<span class="keyword">return</span> <span class="this">this</span>;
+		<span class="keyword">for</span>(<span class="keyword">var</span> <span class="variable">i</span> = <span class="number integer">0</span>; <span class="variable">i</span> &<span class="variable">lt</span>; <span class="variable">arr</span>.<span class="variable">length</span>; <span class="variable">i</span>++){
+			<span class="variable">arr</span>[<span class="variable">i</span>].<span class="variable">apply</span>(<span class="this">this</span>, <span class="class">Array</span>.<span class="variable">prototype</span>.<span class="variable">slice</span>.<span class="variable">call</span>(<span class="variable">arguments</span>, <span class="number integer">1</span>))
 		}
-		return this;
+		<span class="keyword">return</span> <span class="this">this</span>;
 	}
-};</p>
-</td>
-<td class="code">
-<pre><code>*
- * <span class="variable">mixin</span> <span class="variable">will</span> <span class="variable">delegate</span> <span class="variable">all</span> <span class="variable">microevent</span>.<span class="variable">js</span> <span class="keyword">function</span> <span class="keyword">in</span> <span class="variable">the</span> <span class="variable">destination</span> <span class="variable">object</span>
- *
- * - <span class="variable">require</span>(<span class="string">'microevent'</span>).<span class="variable">mixin</span>(<span class="class">Foobar</span>) <span class="variable">will</span> <span class="variable">make</span> <span class="class">Foobar</span> <span class="variable">able</span> <span class="variable">to</span> <span class="variable">use</span> <span class="variable">microevent</span>
- *
- * @<span class="variable">param</span> {<span class="class">Object</span>} <span class="variable">the</span> <span class="variable">object</span> <span class="variable">which</span> <span class="variable">will</span> <span class="variable">support</span> <span class="variable">microevent</span>
-</code></pre>
+};</code></pre>
 </td>
 </tr>
 <tr class="code">
 <td class="docs">
-<p>microevent.mixin	= function(destObject){
-	var props	= ['fcts', 'bind', 'unbind', 'trigger'];
-	for(var i = 0; i &lt; props.length; i ++){
-		destObject.prototype[props[i]]	= microevent.prototype[props[i]];
-	}
-}</p>
+<p>mixin will delegate all microevent.js function in the destination object</p>
 
-<p>// export in common js
-if( typeof module !== "undefined"){
-	module.exports	= microevent
-}</p>
+<ul><li>require('microevent').mixin(Foobar) will make Foobar able to use microevent</li></ul>
+
+<h2></h2>
+
+<ul><li><strong>param</strong>: <em>Object</em>  the object which will support microevent</li></ul>
 </td>
 <td class="code">
+<pre><code><span class="variable">microevent</span>.<span class="variable">mixin</span>	= <span class="keyword">function</span>(<span class="variable">destObject</span>){
+	<span class="keyword">var</span> <span class="variable">props</span>	= [<span class="string">'fcts'</span>, <span class="string">'bind'</span>, <span class="string">'unbind'</span>, <span class="string">'trigger'</span>];
+	<span class="keyword">for</span>(<span class="keyword">var</span> <span class="variable">i</span> = <span class="number integer">0</span>; <span class="variable">i</span> &<span class="variable">lt</span>; <span class="variable">props</span>.<span class="variable">length</span>; <span class="variable">i</span> ++){
+		<span class="variable">destObject</span>.<span class="variable">prototype</span>[<span class="variable">props</span>[<span class="variable">i</span>]]	= <span class="variable">microevent</span>.<span class="variable">prototype</span>[<span class="variable">props</span>[<span class="variable">i</span>]];
+	}
+}
 
+<span class="comment">// export in common js</span>
+<span class="keyword">if</span>( <span class="keyword">typeof</span> <span class="variable">module</span> !== &<span class="variable">quot</span>;<span class="variable">undefined</span>&<span class="variable">quot</span>;){
+	<span class="variable">module</span>.<span class="variable">exports</span>	= <span class="variable">microevent</span>
+}
+</code></pre>
 </td>
 </tr><tr class="filename"><td><h2 id="lib/ng_index.js"><a href="#">ng_index</a></h2></td><td>lib/ng_index.js</td></tr><tr class="code">
 <td class="docs">
@@ -1245,6 +1299,7 @@ if( typeof module !== "undefined"){
 
 	<span class="class">Object</span>.<span class="variable">keys</span>(<span class="this">this</span>.<span class="variable">scripts</span>).<span class="variable">forEach</span>(<span class="keyword">function</span>(<span class="variable">script</span>, <span class="variable">scriptId</span>){
 		<span class="variable">console</span>.<span class="variable">log</span>(&<span class="variable">quot</span>;<span class="variable">scriptid</span>&<span class="variable">quot</span>;, <span class="variable">scriptId</span>, &<span class="variable">quot</span>;<span class="variable">script</span>&<span class="variable">quot</span>;, <span class="variable">script</span>)
+		<span class="comment">//var superBot	= this.requireText(script);</span>
 		<span class="comment">// TODO dunno how to convert the script text in a class</span>
 		<span class="comment">// - security issue</span>
 		<span class="comment">// - see with webworker</span>
@@ -1252,7 +1307,29 @@ if( typeof module !== "undefined"){
 }
 
 <span class="comment">// inherit microevent</span>
-<span class="variable">require</span>(<span class="string">'./microevent'</span>).<span class="variable">mixin</span>(<span class="variable">jsbattleCore</span>)
+<span class="variable">require</span>(<span class="string">'./microevent'</span>).<span class="variable">mixin</span>(<span class="variable">jsbattleCore</span>)</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p>Act as a commonjs require() with this text as file content</p>
+
+<ul><li>TODO experiment in another file</li><li>based weppy good work on brequire</li><li>http://boodigital.com/post/3424290434/sharing-javascript-between-client-and-server</li></ul>
+</td>
+<td class="code">
+<pre><code><span class="variable">jsbattleCore</span>.<span class="variable">prototype</span>.<span class="variable">requireText</span>	= <span class="keyword">function</span>(<span class="variable">text</span>){
+	<span class="keyword">var</span> <span class="variable">prefix</span>	= &<span class="variable">quot</span>;(<span class="keyword">function</span>(){&<span class="variable">quot</span>;				+
+			&<span class="variable">quot</span>;	<span class="keyword">var</span> <span class="variable">_module</span>	= { <span class="variable">exports</span>: {} };&<span class="variable">quot</span>;	+
+			&<span class="variable">quot</span>;	<span class="keyword">var</span> <span class="variable">_require</span>	= <span class="keyword">function</span>(<span class="variable">moduleId</span>){&<span class="variable">quot</span>;	+
+			&<span class="variable">quot</span>;		<span class="keyword">return</span> <span class="variable">require</span>(<span class="variable">moduleId</span>);&<span class="variable">quot</span>;	+
+			&<span class="variable">quot</span>;	};&<span class="variable">quot</span>;					+
+			&<span class="variable">quot</span>;	(<span class="keyword">function</span>(<span class="variable">module</span>, <span class="variable">exports</span>, <span class="variable">require</span>){&<span class="variable">quot</span>;;
+			<span class="comment">// Here goes the javascript with commonjs modules</span>
+	<span class="keyword">var</span> <span class="variable">suffix</span>	= &<span class="variable">quot</span>;	})(<span class="variable">_module</span>, <span class="variable">_module</span>.<span class="variable">exports</span>, <span class="variable">_require</span>);&<span class="variable">quot</span>;+
+			&<span class="variable">quot</span>;	<span class="keyword">return</span> <span class="variable">_module</span>.<span class="variable">exports</span>;&<span class="variable">quot</span>;		+
+			&<span class="variable">quot</span>;})();&<span class="variable">quot</span>;;	
+	<span class="keyword">return</span> <span class="variable">eval</span>(<span class="variable">prefix</span>+<span class="variable">text</span>+<span class="variable">suffix</span>)
+}
 
 
 <span class="variable">module</span>.<span class="variable">exports</span>	= <span class="variable">jsbattleCore</span>;</code></pre>
