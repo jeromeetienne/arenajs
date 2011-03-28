@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+	<!-- editor container -->
+	<style type="text/css" media="screen">
+		#editorContainer {
+			float	: right;
+		}
+	</style>
+	<div id="editorContainer">
+		<div class="menu">
+			<span>ScriptId : <span class="value">none</span></span>
+			<input type="button" value="upload"/>
+		</div>
+		<iframe id="editor" src="http://localhost/~jerome/webwork/acewidget/iframe.html?theme=twilight&mode=javascript" width="600px" height="400px"></iframe>
+	</div>
+
+	<!-- viewer container -->
+	<div id="viewerContainer">
+		<div class="menu">
+			<input type="button" value="start"	onClick="doViewerStart();"	/>
+			<input type="button" value="stop"	onClick="doViewerStop();"	/>
+			<input type="button" value="pause"	onClick="doViewerPause();"	/>
+		</div>
+		<iframe id="viewer" src="../viewer" width="600px" height="400px"></iframe>
+	</div>
+
+	<!-- include js -->
+	<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js'></script>	
+	<script src='index.js'></script>	
+</body>
+</html>

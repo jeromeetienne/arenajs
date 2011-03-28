@@ -4,7 +4,6 @@
 var Viewer	= function(){
 	// get options from ctor
 	this.editorCss	= ctor_opts.editorCss	|| false;
-
 	
 	if( this.editorCss ){
 		this.editor	= new Viewer.editor({
