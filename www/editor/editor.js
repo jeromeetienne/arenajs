@@ -66,7 +66,7 @@ jQuery(function(){
 var doViewerStart	= function(){
 	var scriptsUrl	= {
 		"bot-1"	: "http://localhost/~jerome/webwork/jsbattle/lib/MyTankBot.js",
-		"bot-2"	: "http://localhost/~jerome/webwork/jsbattle/lib/MyTankBotHuman.js"
+		"bot-2"	: "http://localhost/~jerome/webwork/jsbattle/lib/MyTankBot.js"
 	};
 
 	var scriptsData	= {}
@@ -106,7 +106,13 @@ var doViewerStart	= function(){
 	}
 	
 	var allPushed	= function(){
-		console.log("all pushed")		
+		console.log("all pushed")
+		viewerCall({
+			type	: "gameStart",
+			data	: null
+		}, function(result){
+			console.log("game started", JSON.stringify(result, null, '\t'));
+		});		
 	}
 	
 	

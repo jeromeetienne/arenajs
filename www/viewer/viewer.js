@@ -1,13 +1,36 @@
 
+var jsbattleCore	= require('./jsbattle_core')
+var TankRenderer	= require('./TankRenderer')
+
 //////////////////////////////////////////////////////////////////////////////////
 //		Viewer ctor/dtor						//
 //////////////////////////////////////////////////////////////////////////////////
 
 var Viewer	= function(){
 	this.windowMessageCtor();
+	
+	
+	this.tankRenderer	= new TankRenderer({
+		containerId	: "renderArea"
+	})
+
+	this.battle	= new jsbattleCore();
+	
+	this.battle.bind("tick", function(gameState){
+		console.log("battle tick", gameState);
+		var world	= gameState.world;
+		var tickEvents	= gameState.tickEvents;
+		this.tankRenderer.renderWorld(world, tickEvents)
+	}.bind(this));
+	this.battle.bind("end", function(gameResult){
+		console.log("battle end", gameResult);	
+	}.bind(this));
 }
 
 Viewer.prototype.destroy	= function(){
+	if( this.battle ){
+		this.battle.destroy();
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -54,11 +77,14 @@ Viewer.prototype.windowMessageCtor	= function(){
 //////////////////////////////////////////////////////////////////////////////////
 
 Viewer.prototype.onInitBot	= function(data){
-	console.log("onInitBot")
-	return "loaded"
+	console.log("onInitBot", data)
+	var scriptId	= data.scriptId;
+	var scriptData	= data.scriptData;
+	this.battle.addScript( scriptId, scriptData );	
+	return true;
 }
 
 Viewer.prototype.onGameStart	= function(){
-	console.log("onGameStart")
+	this.battle.start();
 	return true;
 }
