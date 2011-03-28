@@ -81,8 +81,11 @@ var doViewerStart	= function(){
 
 	var allLoaded	= function(){
 		console.log("all script have been loaded")
-
-		jQuery.each(scriptsData, function(scriptId, scriptData){
+		var toLoad	= Object.keys(scriptsData);
+		var loadOne	= function(){
+			var scriptId	= toLoad.pop();
+			var scriptData	= scriptsData[scriptId];
+			console.log("push", scriptId)
 			viewerCall({
 				type	: "initBot",
 				data	: {
@@ -90,9 +93,20 @@ var doViewerStart	= function(){
 					scriptData	: scriptData
 				}
 			}, function(data){
-				console.log("scriptid", scriptid, JSON.stringify(data, null, '\t'));
-			});
-		});
+				console.log("scriptid", scriptId, JSON.stringify(data, null, '\t'));
+				console.log("toLoad.length", toLoad.length)
+				if( toLoad.length > 0 ){
+					loadOne();					
+				}else{
+					allPushed();
+				}
+			});		
+		};
+		loadOne();
+	}
+	
+	var allPushed	= function(){
+		console.log("all pushed")		
 	}
 	
 	

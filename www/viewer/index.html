@@ -21,30 +21,10 @@
 	<script src='../vendor/jquery.url.js'></script>
 	<script src='../vendor/jquery.hotkeys.js'></script>
 
-<!--
-- This is a iframe widget
-  * UI to get new script ?
-  * postmessage API ?
-  * ctor parameters
--->
 	<h1>inside viewer</h1>
+	<script src='viewer.js'></script>
 	<script>
-		//var scriptsUrl	= [
-		//	"http://localhost/~jerome/webwork/jsbattle/www/brequired/MyTankBot.js"
-		//];
-		//var scriptsData	= {}
-		//jQuery.each(scriptsUrl, function(idx, scriptUrl){
-		//	console.log("scriptUrl", scriptUrl);
-		//	jQuery.get(scriptUrl, function(scriptData){
-		//		scriptsData[scriptUrl]	= scriptData;
-		//		if( _.keys(scriptsData) == scriptUrl.length ){
-		//			allLoaded()
-		//		}
-		//	});
-		//});
-		//var allLoaded	= function(){
-		//	console.log("all script have been loaded")
-		//}
+		var viewer	= new Viewer();
 	</script>
 	
 </body>
