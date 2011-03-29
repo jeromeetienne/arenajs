@@ -82,16 +82,13 @@ Dashboard.prototype.viewerCall	= function(event, callback){
 }
 
 Dashboard.prototype.viewerStart	= function(){
-	var scriptsUrl	= {
-		"bot-1"	: "http://localhost/~jerome/webwork/jsbattle/lib/MyTankBot.js",
-		"bot-2"	: "http://localhost/~jerome/webwork/jsbattle/lib/MyTankBot.js"
-	};
+	var scripts	= this.scriptsListCollect();
 
 	var scriptsData	= {}
-	jQuery.each(scriptsUrl, function(scriptId, scriptUrl){
+	jQuery.each(scripts, function(scriptId, scriptUrl){
 		jQuery.get(scriptUrl, function(scriptData){
 			scriptsData[scriptId]	= scriptData;
-			if( Object.keys(scriptsData).length == Object.keys(scriptsUrl).length ){
+			if( Object.keys(scriptsData).length == Object.keys(scripts).length ){
 				allLoaded()
 			}
 		}, 'html');
@@ -161,7 +158,6 @@ Dashboard.prototype.viewerStart	= function(){
 
 Dashboard.prototype.scriptsListUiCtor	= function()
 {
-
 	jQuery('#ScriptListMenu input[value=insert]').live('click', function(){
 		this.scriptsListUiAppendItem();
 	}.bind(this));
@@ -188,18 +184,17 @@ Dashboard.prototype.scriptsListUiCtor	= function()
 		this.scriptsListPutLocation();
 	}.bind(this));
 	
-	
+
+	// initialisation of the item in ScriptsList	
 	var scripts	= this.scriptsListGetLocation();
 	console.log("scripts", scripts)
 	if( scripts ){
 		this.scriptsListUiClear();
 		Object.keys(scripts).forEach(function(scriptId){
 			var scriptUrl	= scripts[scriptId];
-	console.log("scriptUrl", scriptUrl)
 			this.scriptsListUiAppendItem(scriptId, scriptUrl)
 		}.bind(this))
 	}else{
-		console.log("slll")
 		this.scriptsListUiAppendItem();
 	}
 }
