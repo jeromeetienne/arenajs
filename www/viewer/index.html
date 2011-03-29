@@ -4,14 +4,13 @@
 	<style type="text/css" media="screen">
 		body {
 			overflow: hidden;
-		}
-		#editor {
 			margin	: 0;
+			padding	: 0;
+		}
+		#renderArea {
 			position: absolute;
 			top	: 0;
 			bottom	: 0;
-			left	: 0;
-			right	: 0;
 		}
 	</style>
 </head>
@@ -39,21 +38,18 @@
 	<script src='../brequired/MyTankBotHuman.js'></script>
 	<script src='../brequired/jsbattle_core.js'></script>
 	<script src='../brequired/index.js'></script>
-	
+
 	<!-- define jsbattle viewport -->
-	<style type="text/css">
-		canvas {
-			border	: 1px solid black;
-		}
-	</style>
-	<canvas id="renderArea" width="400px" height="400px"></canvas>
+	<canvas id="renderArea"></canvas>
+	<script>document.getElementById('renderArea').width	= window.innerWidth;	</script>
+	<script>document.getElementById('renderArea').height	= window.innerHeight;	</script>
+
 	<!-- create the image to display in jsbattle viewport -->
 	<img id="imageBody"	src="../images/body.png"		style="display:none"/>
 	<img id="imageBullet"	src="../images/bullet.png"		style="display:none"/>
 	<img id="imageRadar"	src="../images/radar.png"		style="display:none"/>
 	<img id="imageTurret"	src="../images/turret.png"		style="display:none"/>
 
-	<h1>inside viewer</h1>
 	<script src='viewer.js'></script>
 	<script>
 		var viewer	= new Viewer();

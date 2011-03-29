@@ -17,7 +17,7 @@ var Viewer	= function(){
 	this.battle	= new jsbattleCore();
 	
 	this.battle.bind("tick", function(gameState){
-		console.log("battle tick", gameState);
+		//console.log("battle tick", gameState);
 		var world	= gameState.world;
 		var tickEvents	= gameState.tickEvents;
 		this.tankRenderer.renderWorld(world, tickEvents)
@@ -77,7 +77,7 @@ Viewer.prototype.windowMessageCtor	= function(){
 //////////////////////////////////////////////////////////////////////////////////
 
 Viewer.prototype.onInitBot	= function(data){
-	console.log("onInitBot", data)
+	console.log("onInitBot", data.scriptId)
 	var scriptId	= data.scriptId;
 	var scriptData	= data.scriptData;
 	this.battle.addScript( scriptId, scriptData );	
