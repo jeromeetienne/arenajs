@@ -1,5 +1,5 @@
 
-var jsbattleCore	= require('./jsbattle_core')
+var ArenajsCore		= require('./ArenajsCore')
 var TankRenderer	= require('./TankRenderer')
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -8,13 +8,12 @@ var TankRenderer	= require('./TankRenderer')
 
 var Viewer	= function(){
 	this.windowMessageCtor();
-	
-	
+		
 	this.tankRenderer	= new TankRenderer({
 		containerId	: "renderArea"
 	})
 
-	this.battle	= new jsbattleCore();
+	this.battle	= new ArenajsCore();
 	
 	this.battle.bind("tick", function(gameState){
 		//console.log("battle tick", gameState);
@@ -85,6 +84,10 @@ Viewer.prototype.onInitBot	= function(data){
 }
 
 Viewer.prototype.onGameStart	= function(){
+	if( this.battle.isStarted() ){
+		console.log("already started. do nothing")
+		return 
+	}
 	this.battle.start();
 	return true;
 }
