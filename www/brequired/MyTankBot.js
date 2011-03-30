@@ -26,8 +26,9 @@ var bot	= TankBot.Bot.extend({
 	},
 	/**
 	 * Handle collision with a wall
+	 * 
 	*/
-	onHitWall	: function(){
+	onHitWall	: function(eventType, eventArgs){
 		this.turn(util.deg2rad(180));
 		//this.turn(180+20-40*Math.random());		
 		//this.turn(180+20-40*Math.random());		
@@ -37,7 +38,6 @@ var bot	= TankBot.Bot.extend({
 		this.turn(util.deg2rad(40-80*Math.random()));
 	}
 });
-
 
 // to mixin TankBotPlugin into bot
 require('./TankBotPlugin').mixin(bot)

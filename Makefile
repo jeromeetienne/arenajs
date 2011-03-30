@@ -1,7 +1,7 @@
 #!/usr/bin/make
 # to automatize repeatitive actions
 
-PROJECT_NAME=jsbattle
+PROJECT_NAME=arenajs
 
 
 clean	: brequire_clean

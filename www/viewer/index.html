@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style type="text/css" media="screen">
+		body {
+			overflow: hidden;
+			margin	: 0;
+			padding	: 0;
+		}
+		#renderArea {
+			position: absolute;
+			top	: 0;
+			bottom	: 0;
+		}
+	</style>
+</head>
+<body>
+	<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js'></script>
+	<script src='http://ajax.cdnjs.com/ajax/libs/underscore.js/1.1.4/underscore-min.js'></script>
+	<script src='../vendor/jquery.url.js'></script>
+	<script src='../vendor/jquery.hotkeys.js'></script>
+
+	<script src='../vendor/firebugx.js'></script>
+
+	<script src='../vendor/key_status.js'></script>
+	
+	<script src='../vendor/brequire.js'></script>
+	<script src='../brequired/class.js'></script>
+	<script src='../brequired/microevent.js'></script>
+	<script src='../brequired/util.js'></script>
+	<script src='../brequired/jsbattle.js'></script>
+	<script src='../brequired/TankBot.js'></script>
+	<script src='../brequired/TankBotPlugin.js'></script>
+	<script src='../brequired/TankGame.js'></script>
+	<script src='../brequired/TankRenderer.js'></script>
+	<script src='../brequired/TankWorld.js'></script>
+	<script src='../brequired/MyTankBot.js'></script>
+	<script src='../brequired/MyTankBotHuman.js'></script>
+	<script src='../brequired/jsbattle_core.js'></script>
+	<script src='../brequired/index.js'></script>
+
+	<!-- define jsbattle viewport -->
+	<canvas id="renderArea"></canvas>
+	<script>document.getElementById('renderArea').width	= window.innerWidth;	</script>
+	<script>document.getElementById('renderArea').height	= window.innerHeight;	</script>
+
+	<!-- create the image to display in jsbattle viewport -->
+	<img id="imageBody"	src="../images/body.png"		style="display:none"/>
+	<img id="imageBullet"	src="../images/bullet.png"		style="display:none"/>
+	<img id="imageRadar"	src="../images/radar.png"		style="display:none"/>
+	<img id="imageTurret"	src="../images/turret.png"		style="display:none"/>
+
+	<script src='viewer.js'></script>
+	<script>
+		var viewer	= new Viewer();
+	</script>
+	
+</body>
+</html>

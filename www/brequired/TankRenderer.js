@@ -24,6 +24,8 @@ var TankRendererCanvas	= TankRenderer.extend({
 		// init canvas context
 		this.canvas	= document.getElementById(this.containerId);
 		this.ctx	= this.canvas.getContext('2d');
+		console.log("ctx.width", this.canvas.width)
+		console.log("ctx.height", this.canvas.height)
 		console.assert(this.ctx, 'bug in canvas support');
 	},
 	/**

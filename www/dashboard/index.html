@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+	<h1>Arena.js Dashboard</h1>
+	<style type="text/css" media="screen">
+		#dashboardContainer {
+			/*text-align	: center;*/
+		}
+	</style>
+	<div id="dashboardContainer">
+		<!-- editor container -->
+		<style type="text/css" media="screen">
+			#viewerContainer {
+				float		: left;
+				margin-right	: 2em;
+			}
+		</style>
+	
+		<!-- viewer container -->
+		<div id="viewerContainer">
+			<div class="menu">
+				<input type="button" value="start"	/>
+				<input type="button" value="reload"	>
+			</div>
+			<iframe id="viewer" src="../viewer" width="600px" height="400px"></iframe>
+		</div>
+		<div id="editorContainer">
+			<div class="menu">
+				<span>ScriptId : <span class="value">none</span></span>
+				<input type="button" value="clear"	/>
+			</div>
+			<div id="editor"></div>
+		</div>
+	
+		<!-- ScriptList container -->
+		<div id="ScriptListContainer">
+			<div id="ScriptListMenu">
+				<input type="button" value="insert"	>
+			</div>
+			<div id="ScriptList">
+			</div>
+			<div id="ScriptListItemSample" style="display: none;">
+				<div class="item">
+					<input type="text" name="scriptId" 	placeholder="scriptId">
+					<input type="text" name="scriptUrl"	placeholder="scriptUrl" size="50">
+					<input type="button" value="remove"	>
+					<input type="button" value="edit"	>
+				</div>
+			</div>
+		</div>
+	</div>	
+
+	<!-- include js -->
+	<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js'></script>
+	<script src='jquery.acewidget.js'></script>
+	<script src='dashboard.js'></script>
+	<script>jQuery(function(){var dashboard = new Dashboard();});</script>	
+</body>
+</html>
