@@ -21,6 +21,8 @@ var bot	= TankBot.Bot.extend({
 		//this.turretTurn(util.deg2rad(1));
 		this.turretToNearestBot();
 
+		if( Math.floor(Math.random()*50) == 0 )	this.shoot();
+
 		// TODO move this _super() at the begining of the function
 		this._super();
 	},

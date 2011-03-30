@@ -41,7 +41,6 @@ ArenajsCore.prototype.addScript	= function(scriptId, scriptData){
 
 ArenajsCore.prototype.start	= function(){
 	console.assert(Object.keys(this.scripts).length > 0)
-	console.log("starting jsbattle")
 
 	// sanity check - it MUST NOT be already started
 	console.assert(this.isStarted() === false, "game already started");

@@ -59,7 +59,12 @@ arena.bind("tick", function(gameState){
  * }
 */
 arena.bind("end", function(gameResult){
-	console.log("arena end", gameResult);
+	var deathOrder	= gameResult.deathOrder;
+	var turnIdx	= gameResult.turnIdx;
+	var winScriptId	= deathOrder[deathOrder.length - 1];
+
+	console.log("arena.js: game won by "+winScriptId+" after "+turnIdx+"-turns")
+	console.log("arena.js: death order ", deathOrder)
 	arena.destroy();
 	process.exit(0)
 });
@@ -72,6 +77,8 @@ botArgs.forEach(function(botArg){
 	arena.addScript(scriptId, loadScript(scriptAddr))
 });
 
+// log the event
+console.log("arena.js: let the fight begin!!!")
 
 // start the arena
 arena.start();

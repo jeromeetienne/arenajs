@@ -216,7 +216,7 @@ var TankGame	= jsbattle.Game.extend({
 		this.world.bodies.forEach(function(body){
 			if( body.isAlive() === false ){
 				if( body instanceof TankBot.Bot ){
-					console.log("death of", body.name)
+					console.log("arena.js: death of", body.name, "at turn", this.turnIdx)
 					this.deathOrder.push(body.name);
 				}
 				this.delBody(body)
