@@ -46,7 +46,7 @@ var arena	= new ArenajsCore();
  *   - thus viewer can make  visual/sound effects based on those event
 */
 arena.bind("tick", function(gameState){
-	console.log("tick", gameState)
+	//console.log("tick", gameState)
 	var world	= gameState.world;
 	var tickEvents	= gameState.tickEvents;
 	tankRenderer.renderWorld(world, tickEvents)
@@ -59,7 +59,9 @@ arena.bind("tick", function(gameState){
  * }
 */
 arena.bind("end", function(gameResult){
-	console.log("arena end", gameResult);	
+	console.log("arena end", gameResult);
+	arena.destroy();
+	process.exit(0)
 });
 
 

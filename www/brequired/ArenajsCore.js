@@ -20,7 +20,7 @@ var ArenajsCore	= function(){
 	this.scripts	= {};
 }
 
-ArenajsCore.destroy	= function(){
+ArenajsCore.prototype.destroy	= function(){
 }
 
 
@@ -58,14 +58,13 @@ ArenajsCore.prototype.start	= function(){
 		var botY	= Math.floor(Math.random()*this.tankWorld.height())	+ this.tankWorld.minPosition.y;
 		var bot	= new BotClass({
 			game	: this.tankGame,
-			name	: "bot-"+scriptId,
+			name	: scriptId,
 			position: {
 				x:	botX,
 				y:	botY
 			}
 		});
 	}.bind(this))
-
 
 
 	// start the game

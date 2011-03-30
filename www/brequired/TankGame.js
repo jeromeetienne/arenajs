@@ -19,6 +19,7 @@ var TankGame	= jsbattle.Game.extend({
 	bots		: [],
 	shoots		: [],
 	tickEvents	: [],
+	deathOrder	: [],
 	
 	destroy	: function(){
 		clearTimeout(this.timeoutId)
@@ -108,16 +109,27 @@ var TankGame	= jsbattle.Game.extend({
 			});
 			this.tickEvents	= [];
 
+			// if last tick triggered endGame, dont loop anymore
+			if( !this.isStarted() ){
+				return;
+			}
+
 			// count the turns
 			this.turnIdx++;
 			if( this.turnIdx == this.maxTurns ){
 				// emit the 'end' event
-				this.trigger('end', "noideawhattoputinhere")
+				this._endGame();
 			}else{
 				this.timeoutId	= setTimeout(callback.bind(this), loopDelay);				
 			}
 		}
 		this.timeoutId	= setTimeout(callback.bind(this), 0);
+	},
+	stop	: function(){
+		if( this.timeoutId ){
+			clearTimeout(this.timeoutId)
+			this.timeoutId	= null;			
+		}		
 	},
 	/**
 	 * @returns {Boolean} true if the game isStarted(), false otherwise
@@ -143,6 +155,10 @@ var TankGame	= jsbattle.Game.extend({
 		this._collisionBotShoot();
 		// notify all body of death
 		this._notify_death();
+	},
+	_endGame	: function(){
+		this.stop();
+		this.trigger('end', this._buildGameResult())
 	},
 	_collisionBodyWall	: function(){
 		this.world.bodies.forEach(function(body){
@@ -199,10 +215,23 @@ var TankGame	= jsbattle.Game.extend({
 	_notify_death	: function(){
 		this.world.bodies.forEach(function(body){
 			if( body.isAlive() === false ){
+				if( body instanceof TankBot.Bot ){
+					console.log("death of", body.name)
+					this.deathOrder.push(body.name);
+				}
 				this.delBody(body)
 				body.notify('death')				
 			}
-		}.bind(this));		
+		}.bind(this));
+		if( this.world.bodies.length === 0 ){
+			this._endGame();
+		}
+	},
+	_buildGameResult	: function(){
+		return {
+			turnIdx		: this.turnIdx,
+			deathOrder	: this.deathOrder
+		};
 	}
 });
 
