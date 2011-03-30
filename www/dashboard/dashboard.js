@@ -59,7 +59,8 @@ Dashboard.prototype.editorSetValue	= function(scriptId, scriptData){
 
 Dashboard.prototype.viewerCtor	= function()
 {
-	this.viewerReset();	
+	this.viewerReset();
+	this.viewerListen();
 	jQuery('#viewerContainer .menu input[value=start]').live('click', function(){
 		this.viewerStart();
 	}.bind(this));
@@ -84,7 +85,7 @@ Dashboard.prototype.viewerReset	= function()
 }
 
 Dashboard.prototype.viewerCall	= function(event, callback){
-	var iframeWin	= document.getElementById("viewerIframe").contentWindow;
+	var destWindow	= document.getElementById("viewerIframe").contentWindow;
 	// if a callback is present, install it now
 	if( callback ){
 		event.userdata	= event.userdata	|| {}
@@ -94,7 +95,7 @@ Dashboard.prototype.viewerCall	= function(event, callback){
 		};
 	}
 	// post the message
-	iframeWin.postMessage(JSON.stringify(event), "*");
+	destWindow.postMessage(JSON.stringify(event), "*");
 }
 
 Dashboard.prototype.viewerStart	= function(){
@@ -177,6 +178,18 @@ Dashboard.prototype.viewerStart	= function(){
 	 *
 	 * End game
 	*/
+}
+
+Dashboard.prototype.viewerListen	= function(){
+	jQuery(window).bind('message', function(jQueryEvent){
+		var event	= jQueryEvent.originalEvent;
+
+		console.log("viewer message", event.origin, event.data)
+		//console.log("**********************")
+		//console.log("**********************")
+		//console.log("**********************")
+		//console.dir(event)
+	})
 }
 
 

@@ -14,6 +14,11 @@ var Viewer	= function(){
 	})
 
 	this.battle	= new ArenajsCore();
+
+	// notify the parent of the gameResult
+	this.windowMessageSend({
+		type	: "yoyoyoyo"
+	});
 	
 	this.battle.bind("tick", function(gameState){
 		//console.log("battle tick", gameState);
@@ -22,7 +27,11 @@ var Viewer	= function(){
 		this.tankRenderer.renderWorld(world, tickEvents)
 	}.bind(this));
 	this.battle.bind("end", function(gameResult){
-		console.log("battle end", gameResult);	
+		// notify the parent of the gameResult
+		this.windowMessageSend({
+			type	: "end",
+			data	: gameResult
+		});
 	}.bind(this));
 }
 
@@ -69,6 +78,21 @@ Viewer.prototype.windowMessageCtor	= function(){
 			console.log("event ", eventType, "is unknown")
 		}
 	}.bind(this), false);
+}
+
+Viewer.prototype.windowMessageSend	= function(event, callback){
+	var destWindow	= window.parent;
+	console.log("viewer.windowMessageSend", event)
+	// if a callback is present, install it now
+	if( callback ){
+		event.userdata	= event.userdata	|| {}
+		event.userdata.callback	= "windowParent-"+Math.floor(Math.random()*99999).toString(36);
+		window[event.userdata.callback]	= function(data){
+			callback(data)
+		};
+	}
+	// post the message
+	destWindow.postMessage(JSON.stringify(event), "*");	
 }
 
 //////////////////////////////////////////////////////////////////////////////////
