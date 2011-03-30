@@ -1,6 +1,6 @@
 
 var ArenajsCore		= require('./ArenajsCore')
-var TankRenderer	= require('./TankRenderer')
+var TankRendererCanvas	= require('./TankRendererCanvas')
 
 //////////////////////////////////////////////////////////////////////////////////
 //		Viewer ctor/dtor						//
@@ -9,7 +9,7 @@ var TankRenderer	= require('./TankRenderer')
 var Viewer	= function(){
 	this.windowMessageCtor();
 		
-	this.tankRenderer	= new TankRenderer({
+	this.tankRenderer	= new TankRendererCanvas({
 		containerId	: "renderArea"
 	})
 
@@ -86,7 +86,7 @@ Viewer.prototype.onInitBot	= function(data){
 Viewer.prototype.onGameStart	= function(){
 	if( this.battle.isStarted() ){
 		console.log("already started. do nothing")
-		return 
+		return false;
 	}
 	this.battle.start();
 	return true;

@@ -8,12 +8,10 @@ require.module('./cmdline', function(module, exports, require) {
 
 var botArgs		= process.argv.slice(2);
 
-var ArenajsCore		= require('./ArenajsCore')
+var ArenajsCore		= require('./ArenajsCore');
 
-var TankRenderer	= require('./TankRenderer')
-var tankRenderer	= new TankRenderer({
-	containerId	: "renderArea"
-})
+var TankRenderer	= require('./TankRendererConsole');
+var tankRenderer	= new TankRenderer();
 
 var loadScript	= function(filename){
 	var loadNode	= function(filename){
@@ -48,7 +46,7 @@ var arena	= new ArenajsCore();
  *   - thus viewer can make  visual/sound effects based on those event
 */
 arena.bind("tick", function(gameState){
-	console.log("tick", JSON.stringify(gameState))
+	console.log("tick", gameState)
 	var world	= gameState.world;
 	var tickEvents	= gameState.tickEvents;
 	tankRenderer.renderWorld(world, tickEvents)
