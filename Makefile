@@ -16,7 +16,7 @@ doc	: doc_build
 #		misc								#
 #################################################################################
 
-HTML_TITLE=arenajs - where js coders fight
+HTML_TITLE=arenajs - where jabascript coders fight
 homepage_build:
 	pandoc -A ~/.pandoc.header.html README.md -o index.html
 	sed -i "s/github.com\/you/github.com\/jeromeetienne\/$(PROJECT_NAME)/g" index.html
@@ -26,8 +26,8 @@ jshint	:
 	jshint lib/*.js
 
 doc_build:
-	dox --title "arenajs - the war of the bots"			\
-		--desc "coders vs coders figthing over tank bots"	\
+	dox --title "arenajs"				\
+		--desc "where javascript coders fight"	\
 		lib/*.js > doc/index.html
 
 #################################################################################
