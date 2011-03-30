@@ -101,7 +101,7 @@ Dashboard.prototype.viewerCall	= function(event, callback){
 Dashboard.prototype.viewerStart	= function(){
 	var scripts	= this.scriptsListCollect();
 	var editScriptId= jQuery("#editorContainer .menu .value").text()
-	// load all scriptsData
+	// load all scriptsData from their scriptUrl
 	var scriptsData	= {}
 	jQuery.each(scripts, function(scriptId, scriptUrl){
 		var loaded	= function(scriptId, scriptData){
@@ -162,34 +162,43 @@ Dashboard.prototype.viewerStart	= function(){
 			console.log("game started");
 		}.bind(this));		
 	}.bind(this);	
-	
-	/**
-	 * Game init
-	 * - reinit the widget
-	 *   - reload the iframe ?
-	 * - push all the bots
-	 * - send start
-	 * 
-	 * Game run
-	 * - viewer send states
-	 *   - i grab them and display them on the screen
-	 * - possibly update from the editor ?
-	 *   - currently no live update
-	 *
-	 * End game
-	*/
 }
 
-Dashboard.prototype.viewerListen	= function(){
-	jQuery(window).bind('message', function(jQueryEvent){
-		var event	= jQueryEvent.originalEvent;
+Dashboard.prototype.viewerOnEnd	= function(eventType, eventData)
+{
+	console.log("viewerOnEnd", eventType, eventData)
+	var winScriptId	= eventData.deathOrder[eventData.deathOrder.length - 1];
+	var str		= "Game won by " + winScriptId + " after "+eventData.turnIdx+"-turns";
+	alert(str)
+}
 
-		console.log("viewer message", event.origin, event.data)
+Dashboard.prototype.viewerListen	= function()
+{
+	jQuery(window).bind('message', function(jQueryEvent){
+		var domEvent	= jQueryEvent.originalEvent;
+		var viewerWin	= document.getElementById("viewerIframe").contentWindow;
+		// ignore events which arent from #viewerIframe
+		if( domEvent.source !== viewerWin )	return;
+		var viewerEvent	= JSON.parse(domEvent.data)
+		// ignore any non request (aka replies)
+		if( "type" in viewerEvent === false )	return;
+		
+		
+		var eventType	= viewerEvent.type;
+		var eventData	= viewerEvent.data;
+		// forward to the viewerOn{EventType}() function on the children object
+		var methodName	= "viewerOn" + eventType.substr(0,1).toUpperCase() + eventType.substr(1);
+		if( methodName in this )	this[methodName](eventType, eventData);
+
+		//console.log("viewer message", event.origin, event.data)
+		//console.dir(event)
+		//console.log(event.source === document.getElementById("viewerIframe").contentWindow);
+		//console.log(event.source === document.getElementById("viewerIframe"));
 		//console.log("**********************")
 		//console.log("**********************")
 		//console.log("**********************")
 		//console.dir(event)
-	})
+	}.bind(this))
 }
 
 

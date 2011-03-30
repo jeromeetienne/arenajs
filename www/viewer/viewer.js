@@ -15,11 +15,6 @@ var Viewer	= function(){
 
 	this.battle	= new ArenajsCore();
 
-	// notify the parent of the gameResult
-	this.windowMessageSend({
-		type	: "yoyoyoyo"
-	});
-	
 	this.battle.bind("tick", function(gameState){
 		//console.log("battle tick", gameState);
 		var world	= gameState.world;
