@@ -1,6 +1,6 @@
 
 var ArenajsCore		= require('./ArenajsCore')
-var TankRenderer	= require('./TankRenderer')
+var TankRendererCanvas	= require('./TankRendererCanvas')
 
 //////////////////////////////////////////////////////////////////////////////////
 //		Viewer ctor/dtor						//
@@ -9,7 +9,7 @@ var TankRenderer	= require('./TankRenderer')
 var Viewer	= function(){
 	this.windowMessageCtor();
 		
-	this.tankRenderer	= new TankRenderer({
+	this.tankRenderer	= new TankRendererCanvas({
 		containerId	: "renderArea"
 	})
 
