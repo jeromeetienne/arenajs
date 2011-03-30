@@ -86,7 +86,7 @@ Viewer.prototype.onInitBot	= function(data){
 Viewer.prototype.onGameStart	= function(){
 	if( this.battle.isStarted() ){
 		console.log("already started. do nothing")
-		return 
+		return false;
 	}
 	this.battle.start();
 	return true;

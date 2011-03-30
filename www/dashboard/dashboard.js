@@ -57,17 +57,34 @@ Dashboard.prototype.editorSetValue	= function(scriptId, scriptData){
 //		viewer stuff							//
 //////////////////////////////////////////////////////////////////////////////////
 
-Dashboard.prototype.viewerCtor	= function(){
-	jQuery('#viewerContainer .menu input[value=start]').click(function(){
+Dashboard.prototype.viewerCtor	= function()
+{
+	this.viewerReset();	
+	jQuery('#viewerContainer .menu input[value=start]').live('click', function(){
 		this.viewerStart();
+	}.bind(this));
+	jQuery('#viewerContainer .menu input[value=stop]').live('click', function(){
+		this.viewerReset();
 	}.bind(this));
 }
 Dashboard.prototype.viewerDtor	= function(){
 }
 
 
+Dashboard.prototype.viewerReset	= function()
+{
+	jQuery("#viewer").empty().append(
+		jQuery('<iframe>').attr({
+			id	: "viewerIframe",
+			src	: '../viewer/',
+			width	: '600px',
+			height	: '400px'
+		})
+	);
+}
+
 Dashboard.prototype.viewerCall	= function(event, callback){
-	var iframeWin	= document.getElementById("viewer").contentWindow;
+	var iframeWin	= document.getElementById("viewerIframe").contentWindow;
 	// if a callback is present, install it now
 	if( callback ){
 		event.userdata	= event.userdata	|| {}
