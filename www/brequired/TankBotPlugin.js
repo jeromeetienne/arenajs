@@ -64,7 +64,6 @@ TankBotPlugin.prototype	= {
 		if( Math.abs(turnAngle) < util.deg2rad(15) )	turnAngle = 0;
 		tankbot.turretTurn(turnAngle);
 	}
-
 };
 
 /**
