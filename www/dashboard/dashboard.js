@@ -24,7 +24,8 @@ Dashboard.prototype.editorCtor	= function()
 {
 	// build editor
 	this.acewidget	= jQuery('#editor').acewidget({
-		width		: "650px"
+		width		: "450px",
+		height		: "400px",
 	});
 	// setTabSize to 8
 	this.acewidget.bind("load", function(){
@@ -78,7 +79,7 @@ Dashboard.prototype.viewerReset	= function()
 		jQuery('<iframe>').attr({
 			id	: "viewerIframe",
 			src	: '../viewer/',
-			width	: '600px',
+			width	: '450px',
 			height	: '400px'
 		})
 	);
