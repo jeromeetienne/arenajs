@@ -22,37 +22,36 @@ Dashboard.prototype.destroy	= function(){
 
 Dashboard.prototype.editorCtor	= function()
 {
-	//this.$onEditorMessage	= this.$onEditorMessage	|| this.onEditorMessage.bind(this);
-	window.addEventListener("message", function(event){
-		//console.log("event.data", event.data);
-		var data	= JSON.parse(event.data)
-		// notify the callback if specified
-		if( 'userdata' in data && 'callback' in data.userdata ){
-			//console.log("notify callback to", data.userdata.callback, "with", data)
-			window[data.userdata.callback](data);
-			window[data.userdata.callback]	= undefined;
-		}
+	// build editor
+	this.acewidget	= jQuery('#editor').acewidget({
+		width		: "650px"
 	});
+	// setTabSize to 8
+	this.acewidget.bind("load", function(){
+		this.acewidget.setTabSize(8, function(result){
+			console.log("setTabSize", result.status)
+		});
+	}.bind(this));
+	// bind the clear button
+	jQuery('#editorContainer .menu input[value=clear]').click(function(){
+		jQuery("#editorContainer .menu .value").text("none")
+		this.acewidget.setValue("", function(result){
+			console.log("setValue", result.status)
+		});		
+	}.bind(this));
 }
 
 Dashboard.prototype.editorDtor	= function()
 {
 }
 
-Dashboard.prototype.editorCall	= function(event, callback)
-{
-	var iframeWin	= document.getElementById("editor").contentWindow;
-	// if a callback is present, install it now
-	if( callback ){
-		event.userdata	= event.userdata	|| {}
-		event.userdata.callback	= "editorCall-"+Math.floor(Math.random()*99999).toString(36);
-		window[event.userdata.callback]	= function(data){
-			callback(data)
-		};
-	}
-	// post the message
-	iframeWin.postMessage(JSON.stringify(event), "*");
+Dashboard.prototype.editorSetValue	= function(scriptId, scriptData){
+	jQuery("#editorContainer .menu .value").text(scriptId)
+	this.acewidget.setValue(scriptData, function(result){
+		console.log("setValue", result.status)
+	});
 }
+
 
 //////////////////////////////////////////////////////////////////////////////////
 //		viewer stuff							//
@@ -83,17 +82,30 @@ Dashboard.prototype.viewerCall	= function(event, callback){
 
 Dashboard.prototype.viewerStart	= function(){
 	var scripts	= this.scriptsListCollect();
-
+	var editScriptId= jQuery("#editorContainer .menu .value").text()
+	// load all scriptsData
 	var scriptsData	= {}
 	jQuery.each(scripts, function(scriptId, scriptUrl){
-		jQuery.get(scriptUrl, function(scriptData){
+		var loaded	= function(scriptId, scriptData){
 			scriptsData[scriptId]	= scriptData;
 			if( Object.keys(scriptsData).length == Object.keys(scripts).length ){
 				allLoaded()
-			}
-		}, 'html');
-	});
+			}			
+		}
+		if( scriptId === editScriptId ){
+			this.acewidget.getValue(function(result){
+				console.log("getValue", scriptData)
+				var scriptData	= result.data.data;
+				loaded(scriptId, scriptData);
+			});
+		}else{
+			jQuery.get(scriptUrl, function(scriptData){
+				loaded(scriptId, scriptData);
+			}.bind(this), 'html');		
+		}
+	}.bind(this));
 
+	// send scriptsData to this.viewer
 	var allLoaded	= function(){
 		console.log("all script have been loaded")
 		var toLoad	= Object.keys(scriptsData);
@@ -121,6 +133,7 @@ Dashboard.prototype.viewerStart	= function(){
 		loadOne();
 	}.bind(this);
 	
+	// actually start the game
 	var allPushed	= function(){
 		console.log("all scripts pushed")
 		this.viewerCall({
@@ -130,9 +143,7 @@ Dashboard.prototype.viewerStart	= function(){
 			console.assert(result.status === 'succeed' )
 			console.log("game started");
 		}.bind(this));		
-	}.bind(this);
-	
-	
+	}.bind(this);	
 	
 	/**
 	 * Game init
@@ -164,12 +175,12 @@ Dashboard.prototype.scriptsListUiCtor	= function()
 
 	jQuery('#ScriptList input[type=button][value=edit]').live('click', function(event){
 		var target	= event.currentTarget;
-		var item	= jQuery().parent('div.item');
-		
-		console.log("nb line", jQuery('#ScriptList .item').length);
-		
-		//this.scriptsListCollect();
-		this.scriptsListIdConflict();
+		var item	= jQuery(target).parent('div.item');
+		var scriptId	= jQuery("input[name=scriptId]", item).val();
+		var scriptUrl	= jQuery("input[name=scriptUrl]", item).val();
+		jQuery.get(scriptUrl, function(scriptData){
+			this.editorSetValue(scriptId, scriptData)
+		}.bind(this), 'html');
 	}.bind(this));
 
 	jQuery('#ScriptList input[type=button][value=remove]').live('click', function(event){
